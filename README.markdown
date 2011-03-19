@@ -1,6 +1,12 @@
 # Slim Framework for PHP 5 - Extras
 
+Slim is a micro PHP 5 framework that helps you quickly write simple yet powerful RESTful web applications.
+
 This repository contains supplemental files for the Slim Framework, such as custom views and plugins. I created this repository to keep the primary Slim Framework repository as light-weight as possible.
+
+[Visit the primary repository](http://www.github.com/codeguy/Slim)<br/>
+[Follow Slim on Twitter](http://www.twitter.com/slimphp)<br/>
+[Visit the official website](http://www.slimframework.com/)
 
 ## Custom Views
 
@@ -40,3 +46,15 @@ To learn how to write your own custom View class, visit the [Slim Framework docu
 ## Plugins
 
 Coming soon...
+
+## About the Author
+
+The Slim Framework for PHP 5 is created and maintained by Josh Lockhart, a web developer by day at [New Media Campaigns](http://www.newmediacampaigns.com/), and a [hacker by night](http://github.com/codeguy).
+
+Slim is in active development, and test coverage is continually improving.
+
+## Open Source License
+
+The Slim Framework for PHP 5 and the additional resources in this repository are released under the MIT public license.
+
+<http://www.slimframework.com/license>
