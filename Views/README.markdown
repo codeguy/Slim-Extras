@@ -72,3 +72,21 @@ The `HaangaView` custom View class provides support for the Haanga templating sy
 	//Insert your application routes here
 	Slim::run();
 	?>
+
+## H2oView
+
+The `H2oView` custom View class provides support for the [H2o templating system](http://www.h2o-template.org) for PHP. You can use the H2oView custom View in your application like this:
+
+    <?php
+	require 'slim/Slim.php';
+	require 'views/H2oView.php';
+
+	H2oView::$h2o_directory = './h2o/';
+
+	$app = new Slim(array('view' => new H2oView));
+	// Insert your application routes here
+	$app->run();
+	?>
+
+Refer to the `Views/H2oView.php` file for further documentation.
+
