@@ -73,7 +73,7 @@ class TwigView extends Slim_View {
     /**
      * Creates new TwigEnvironment if it doesn't already exist, and returns it.
      *
-     * @return TwigEnvironment
+     * @return Twig_Environment
      */
     public function getEnvironment() {
         if ( !$this->twigEnvironment ) {
