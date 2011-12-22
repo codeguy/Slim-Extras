@@ -84,6 +84,7 @@ class TwigView extends Slim_View {
                 $loader,
                 self::$twigOptions
             );
+			$this->twigEnvironment->addFunction('url', new Twig_Function_Function('Slim::urlFor'));
         }
         return $this->twigEnvironment;
     }
