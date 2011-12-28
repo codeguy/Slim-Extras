@@ -19,6 +19,11 @@ You can easily pass variables that are objects or arrays by doing:
 
 	<a href="{{ urlFor('hello', {"name": person.name, "age": person.age}) }}">Hello {{ name }}</a>
 
+If you need to specify the appname for the getInstance method in the urlFor functions, set it as the third parameter of the function
+in your template:
+
+	<a href="{{ urlFor('hello', {"name": person.name, "age": person.age}, 'admin') }}">Hello {{ name }}</a>
+
 The $twigExtensions take an array of extension class name which need to follow the naming convention starting with __Extension_Twig__,
 this might seem like a overkill to add Slim's urlFor but it makes organising your project easier as your project becomes larger.
 
@@ -37,5 +42,9 @@ Inside your Smarty template you would write:
 You can easily pass variables that are arrays using the (.) or object using the (->) by doing:
 
 	<a href="{urlFor name="hello" options="name.{$person.name}|age.{$person.age}"}">Hello {$name}</a>
+
+If you need to specify the appname for the getInstance method in the urlFor functions, set the appname parameter in your function:
+
+	<a href="{urlFor name="hello" appname="admin" options="name.{$person.name}|age.{$person.age}"}">Hello {$name}</a>
 
 The $smartyExtensions take an array of extension directories, this follows the Smarty naming convention provided in the Smarty docs.
