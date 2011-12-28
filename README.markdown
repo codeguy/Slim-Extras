@@ -22,6 +22,7 @@ This repository contains custom View classes for the template frameworks listed 
 * Sugar
 * Savant
 * Rain
+* H2o
 
 To learn how to write your own custom View class, visit the [Slim Framework documentation](https://github.com/codeguy/Slim/wiki/Slim-Framework-Documentation#custom-views).
 
