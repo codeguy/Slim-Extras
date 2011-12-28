@@ -66,6 +66,11 @@ class SmartyView extends Slim_View {
     public static $smartyTemplatesDirectory = 'templates';
 
     /**
+     * @var SmartyExtensions The Smarty extensions directory you want to load plugins from
+     */
+    public static $smartyExtensions = array();
+
+    /**
      * @var persistent instance of the Smarty object
      */
     private static $smartyInstance = null;
@@ -99,6 +104,9 @@ class SmartyView extends Slim_View {
             require_once self::$smartyDirectory . '/Smarty.class.php';
             self::$smartyInstance = new Smarty();
             self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
+            if ( self::$smartyExtensions ) {
+                self::$smartyInstance->setPluginsDir(self::$smartyExtensions);
+            }
             if ( self::$smartyCompileDirectory ) {
                 self::$smartyInstance->compile_dir  = self::$smartyCompileDirectory;
             }

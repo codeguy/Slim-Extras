@@ -36,7 +36,7 @@ To learn how to write your own custom View class, visit the [Slim Framework docu
     require_once 'SmartyView.php';
 
     //Init Slim app with the custom View
-    Slim::init(array(
+    $app = new Slim(array(
         'view' => new SmartyView()
     ));
 
