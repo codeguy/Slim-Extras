@@ -52,6 +52,11 @@ class TwigView extends Slim_View {
     public static $twigOptions = array();
 
     /**
+     * @var TwigExtension The Twig extensions you want to load
+     */
+    public static $twigExtensions = array();
+
+    /**
      * @var TwigEnvironment The Twig environment for rendering templates.
      */
     private $twigEnvironment = null;
@@ -85,11 +90,14 @@ class TwigView extends Slim_View {
                 self::$twigOptions
             );
 
-            require_once dirname(__FILE__) . '/Extension/TwigAutoloader.php';
-            Twig_Extensions_Autoloader::register();
+            $extension_autoloader = dirname(__FILE__) . '/Extension/TwigAutoloader.php';
+            if (file_exists($extension_autoloader)) {
+                require_once $extension_autoloader;
+                Twig_Extensions_Autoloader::register();
 
-            foreach (self::$twigExtensions as $ext) {
-                $this->twigEnvironment->addExtension(new $ext);
+                foreach (self::$twigExtensions as $ext) {
+                    $this->twigEnvironment->addExtension(new $ext);
+                }
             }
         }
         return $this->twigEnvironment;
