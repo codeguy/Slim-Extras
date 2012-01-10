@@ -105,7 +105,7 @@ class SmartyView extends Slim_View {
             self::$smartyInstance = new Smarty();
             self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
             if ( self::$smartyExtensions ) {
-                self::$smartyInstance->setPluginsDir(self::$smartyExtensions);
+                self::$smartyInstance->addPluginsDir(self::$smartyExtensions);
             }
             if ( self::$smartyCompileDirectory ) {
                 self::$smartyInstance->compile_dir  = self::$smartyCompileDirectory;
