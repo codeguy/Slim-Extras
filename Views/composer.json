@@ -1,0 +1,25 @@
+{
+    "name": "slim/extras",
+    "type": "library",
+    "description": "Extras package for Slim Framework",
+    "keywords": ["templating","extensions"],
+    "homepage": "http://github.com/codeguy/Slim-Extras",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Lockhart",
+            "email": "info@joshlockhart.com",
+            "homepage": "http://www.joshlockhart.com/"
+        },
+        {
+            "name": "Andrew Smith",
+            "email": "a.smith@silentworks.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "autoload": {
+        "psr-0": { "Twig_Extensions_": "Extension/" }
+    }
+}

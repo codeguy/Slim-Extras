@@ -35,11 +35,11 @@ class Twig_Extensions_Autoloader
      */
     static public function autoload($class)
     {
-        if (0 !== strpos($class, 'Extension_Twig')) {
+        if (0 !== strpos($class, 'Twig_Extensions')) {
             return;
         }
 
-        if (file_exists($file = dirname(dirname(__FILE__)) . '/' . str_replace('_', '/', $class).'.php')) {
+        if (file_exists($file = dirname(__FILE__) . '/' . str_replace('_', '/', $class).'.php')) {
             require $file;
         }
     }

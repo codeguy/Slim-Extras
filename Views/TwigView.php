@@ -82,7 +82,13 @@ class TwigView extends Slim_View {
      */
     public function getEnvironment() {
         if ( !$this->twigEnvironment ) {
-            require_once self::$twigDirectory . '/Autoloader.php';
+            /*
+             * Check for Composer Package Autoloader class loading
+             */
+            if (!class_exists('Twig_Autoloader')) {
+                require_once self::$twigDirectory . '/Autoloader.php';
+            }
+
             Twig_Autoloader::register();
             $loader = new Twig_Loader_Filesystem($this->getTemplatesDirectory());
             $this->twigEnvironment = new Twig_Environment(

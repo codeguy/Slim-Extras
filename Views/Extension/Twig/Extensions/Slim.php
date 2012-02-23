@@ -1,6 +1,6 @@
 <?php
 
-class Extension_Twig_Slim extends Twig_Extension
+class Twig_Extensions_Slim extends Twig_Extension
 {
     public function getName()
     {

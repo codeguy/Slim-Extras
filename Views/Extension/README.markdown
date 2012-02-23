@@ -8,7 +8,7 @@ the Extension directory under the template parser directory of choice.
 To use this in Twig just include the code below at the top of your Slim index.php file after including TwigView.
 
 	TwigView::$twigExtensions = array(
-	    'Extension_Twig_Slim',
+	    'Twig_Extensions_Slim',
 	);
 
 Inside your Smarty template you would write:
