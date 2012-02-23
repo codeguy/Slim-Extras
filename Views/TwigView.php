@@ -82,9 +82,7 @@ class TwigView extends Slim_View {
      */
     public function getEnvironment() {
         if ( !$this->twigEnvironment ) {
-            /*
-             * Check for Composer Package Autoloader class loading
-             */
+            // Check for Composer Package Autoloader class loading
             if (!class_exists('Twig_Autoloader')) {
                 require_once self::$twigDirectory . '/Autoloader.php';
             }
@@ -96,9 +94,13 @@ class TwigView extends Slim_View {
                 self::$twigOptions
             );
 
-            $extension_autoloader = dirname(__FILE__) . '/Extension/TwigAutoloader.php';
-            if (file_exists($extension_autoloader)) {
-                require_once $extension_autoloader;
+            // Check for Composer Package Autoloader class loading
+            if (!class_exists('Twig_Extensions_Autoloader')) {
+                $extension_autoloader = dirname(__FILE__) . '/Extension/TwigAutoloader.php';
+                if (file_exists($extension_autoloader)) require_once $extension_autoloader;
+            }
+
+            if (class_exists('Twig_Extensions_Autoloader')) {
                 Twig_Extensions_Autoloader::register();
 
                 foreach (self::$twigExtensions as $ext) {
