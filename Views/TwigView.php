@@ -102,9 +102,14 @@ class TwigView extends Slim_View {
 
             if (class_exists('Twig_Extensions_Autoloader')) {
                 Twig_Extensions_Autoloader::register();
-
+                
+                //allow loading allready initialized classes. For example: https://gist.github.com/2493431
                 foreach (self::$twigExtensions as $ext) {
-                    $this->twigEnvironment->addExtension(new $ext);
+                    if (is_object($ext)) {
+                        $this->twigEnvironment->addExtension($ext);
+                    } else {
+                        $this->twigEnvironment->addExtension(new $ext);
+                    }
                 }
             }
         }
