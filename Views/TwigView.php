@@ -104,7 +104,8 @@ class TwigView extends Slim_View {
                 Twig_Extensions_Autoloader::register();
 
                 foreach (self::$twigExtensions as $ext) {
-                    $this->twigEnvironment->addExtension(new $ext);
+                    $extension = is_object($ext) ? $ext : new $ext;
+                    $this->twigEnvironment->addExtension($extension);
                 }
             }
         }
