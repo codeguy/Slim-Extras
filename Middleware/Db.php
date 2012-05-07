@@ -1,6 +1,6 @@
 <?
 /**
- * Simple database sql helper class	
+ * Simple sql database helper class	
  * @author Jorge Garrido Oval (aka: FireZenk) <firezenk@gmail.com>
  * @version 1.0
  * @copyright 2012 Jorge Garrido Oval
@@ -67,37 +67,76 @@ class Db {
 	private $query;
 
 	/**
-	 *	Constructor
-	 *	@return void
+	 * This method emulates the behavior of the overloaded methods in Java
+	 * @param string method name
+	 * @param string method arguments
+	 * @return void
 	 */
-	public function __construct() {}
+	function __call($method_name, $arguments) {
+    	$accepted_methods = array("Db", "database");
+
+	    if(!in_array($method_name, $accepted_methods)) {
+	      trigger_error("Method <strong>$method_name</strong> not exists", E_USER_ERROR);
+	    }
+
+	    if($method_name == "Db") {
+	    	switch ( count($arguments) ) {
+	    	case 3:
+				$this-> Db1($arguments[0], $arguments[1], $arguments[2]);
+	    		break;
+	    	case 4:
+	    		$this-> Db2($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
+	    		break;
+	    	default:
+	    		$this-> Db0();
+	    		break;
+	    	}
+	    } else {
+	    	switch ( count($arguments) ) {
+	    	case 1:
+				$this-> database1($arguments[0]);
+	    		break;
+	    	default:
+	    		$this-> database0();
+	    		break;
+	    	}
+	    } 
+      
+	    
+    }
 
 	/**
 	 *	Constructor
-	 *	@param string $sql_host The database host url with server port
+	 *	@return void
+	 */
+	public function Db0() {}
+
+	/**
+	 *	Constructor
+	 *	@param string $sql_host The database host url w/o server port
 	 *	@param string $sql_user The database user name
 	 *	@param string $sql_pass The database user password
 	 *	@return void
 	 */
-	public function __construct($sql_host, $sql_user, $sql_pass) {
-		this -> $sql_host = $sql_host;
-		this -> $sql_user = $sql_user;
-		this -> $sql_pass = $sql_pass;
+	public function Db1($sql_host, $sql_user, $sql_pass) {
+		$this->sql_host = $sql_host;
+		$this->sql_user = $sql_user;
+		$this->sql_pass = $sql_pass;
 	}
 
 	/**
 	 *	Constructor
-	 *	@param string $sql_host The database host url with server port
+	 *	@param string $sql_host The database host url w/o server port
 	 *	@param string $sql_user The database user name
 	 *	@param string $sql_pass The database user password
 	 *	@param string $sql_data The selected database from host
 	 *	@return void
 	 */
-	public function __construct($sql_host, $sql_user, $sql_pass, $sql_data) {
-		this -> $sql_host = $sql_host;
-		this -> $sql_user = $sql_user;
-		this -> $sql_pass = $sql_pass;
-		this -> $sql_data = $sql_data;
+	public function Db2($sql_host, $sql_user, $sql_pass, $sql_data) {
+		$this->sql_host = $sql_host;
+		$this->sql_user = $sql_user;
+		$this->sql_pass = $sql_pass;
+		$this->sql_data = $sql_data;
 	}
 
 	/** 
@@ -105,15 +144,15 @@ class Db {
 	 *	@return void
 	 */
 	public function connect() {
-		$connection = mysql_connect($sql_host, $sql_user, $sql_pass) or die('Could not connect to the server!');
+		$this->connection = mysql_connect($this->sql_host, $this->sql_user, $this->sql_pass) or die('Could not connect to the server!');
 	}
 
 	/** 
 	 *	Select a database
 	 *	@return bool valid database
 	 */
-	public function datatabase() {
-		return mysql_select_db($sql_data) or die('Could not select a database.');
+	public function database0() {
+		return mysql_select_db($this->sql_data) or die('Could not select a database.');
 	}
 
 	/** 
@@ -121,7 +160,7 @@ class Db {
 	 *	@param string $database The selected database from host
 	 *	@return bool valid database
 	 */
-	public function datatabase($database) {
+	public function database1($database) {
 		return mysql_select_db($database) or die('Could not select a database.');
 	}
 
@@ -131,15 +170,16 @@ class Db {
 	 *	@return void
 	 */
 	public function query($query) {
-		this -> $query = $query;
+		$this->query = $query;
 	}
 
 	/**
 	 *	Execute query
-	 *	@return string data result
+	 *	@return resource data result
 	 */
 	public function execute() {
-		return mysql_query($sql) or die('A error occured: ' . mysql_error());
+		$resource = mysql_query($this->query) or die('A error occured: ' . mysql_error());
+		return $resource;
 	}
 
 	/**
@@ -147,7 +187,7 @@ class Db {
 	 *	@return bool discconect result
 	 */
 	public function disconnect() {
-		return mysql_close($connection);
+		return mysql_close($this->connection);
 	}
 
 }
