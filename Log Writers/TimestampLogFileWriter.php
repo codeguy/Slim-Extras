@@ -100,16 +100,16 @@ class TimestampLogFileWriter {
         //Determine label
         $label = 'DEBUG';
         switch ( $level ) {
-            case Slim_Log::FATAL:
+            case 0:
                 $label = 'FATAL';
                 break;
-            case Slim_Log::ERROR:
+            case 1:
                 $label = 'ERROR';
                 break;
-            case Slim_Log::WARN:
+            case 2:
                 $label = 'WARN';
                 break;
-            case Slim_Log::INFO:
+            case 3:
                 $label = 'INFO';
                 break;
         }
