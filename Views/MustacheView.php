@@ -37,16 +37,44 @@
  *
  * There is one field that you, the developer, will need to change:
  * - mustacheDirectory
- *
+ * Setting the field is not required if the Mustache class is found by the
+ * autoloader.
+ * 
  * @package Slim
  * @author  Johnson Page <http://johnsonpage.org>
+ * @author  Michael Heim <http://www.zeilenwechsel.de>
  */
 class MustacheView extends Slim_View {
 
     /**
-     * @var string The path to the directory containing Mustache.php
+     * @var string The path to the directory containing Mustache.php.
+     *             Not required if Mustache.php is autoloaded.
      */
     public static $mustacheDirectory = null;
+
+    /**
+     * Append data to existing View data. Can handle arrays as well as an object (for PHP-5.2-compatible lambda
+     * functions in Mustache).
+     *
+     * Note that you can append arrays to an existing object, or an object to an existing array, but NOT an object to
+     * an object. Use one object only, at the most.
+     *
+     * @param   array|Object $data
+     * @return  void
+     */
+    public function appendData( $data ) {
+        if ( is_object($this->data) and is_object($data) ) {
+            // Can't merge two objects safely, internal state might be lost
+            throw new InvalidArgumentException("Can't merge view data of multiple objects");
+        } elseif ( is_object($this->data) ) {
+            foreach ( $data as $property => $item ) $this->data->$property = $item;
+        } elseif ( is_object($data) ) {
+            foreach ( $this->data as $property => $item ) $data->$property = $item;
+            $this->data = $data;
+        } else {
+            $this->data = array_merge($this->data, $data);
+        }
+    }
 
     /**
      * Renders a template using Mustache.php.
@@ -56,12 +84,30 @@ class MustacheView extends Slim_View {
      * @return string
      */
     public function render( $template ) {
-        require_once self::$mustacheDirectory . '/Mustache.php';
-        $m = new Mustache();
-        $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
-        return $m->render($contents, $this->data);
-    }
+        if (!is_null(self::$mustacheDirectory)) require_once self::$mustacheDirectory . '/Mustache.php';
+        if ( class_exists( 'Mustache' ) ) {
 
+            // Mustache 1.x
+            $m = new Mustache();
+
+            // Add support for the fixed-partials branch of Mustache 1.x
+            if ( method_exists($m, "_setTemplateBase") ) $m->_setTemplateBase($this->getTemplatesDirectory());
+
+            $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
+            return $m->render($contents, $this->data);
+
+        } else {
+
+            // Mustache 2.x
+            $loader = new Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory());
+            $m = new Mustache_Engine( array(
+                'loader' => $loader,
+                'partials_loader' => $loader
+            ) );
+
+            return $m->render(ltrim($template, '/'), $this->data);
+        }
+    }
 }
 
 ?>
