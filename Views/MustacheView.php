@@ -37,8 +37,8 @@
  *
  * There is one field that you, the developer, will need to change:
  * - mustacheDirectory
- * Setting the field is not required if the Mustache class is found by the
- * autoloader.
+ * Setting the field is not required if an autoloader is in place which finds the
+ * Mustache class(es).
  * 
  * @package Slim
  * @author  Johnson Page <http://johnsonpage.org>
@@ -51,7 +51,12 @@ class MustacheView extends Slim_View {
      *             Not required if Mustache.php is autoloaded.
      */
     public static $mustacheDirectory = null;
-
+    
+    /**
+     * @var Mustache|Mustache_Engine Instance of the template engine
+     */
+    protected $mustache = null;
+    
     /**
      * Append data to existing View data. Can handle arrays as well as an object (for PHP-5.2-compatible lambda
      * functions in Mustache).
@@ -84,29 +89,71 @@ class MustacheView extends Slim_View {
      * @return string
      */
     public function render( $template ) {
-        if (!is_null(self::$mustacheDirectory)) require_once self::$mustacheDirectory . '/Mustache.php';
-        if ( class_exists( 'Mustache' ) ) {
-
+        $this->createMustache();
+        if ( $this->getMustacheMajorVersion() == 1 ) {
             // Mustache 1.x
-            $m = new Mustache();
-
-            // Add support for the fixed-partials branch of Mustache 1.x
-            if ( method_exists($m, "_setTemplateBase") ) $m->_setTemplateBase($this->getTemplatesDirectory());
-
             $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
-            return $m->render($contents, $this->data);
-
+            $rendered = $this->mustache->render($contents, $this->data);
         } else {
-
+            // Mustache 2.x
+            $rendered = $this->mustache->render(ltrim($template, '/'), $this->data);
+        }
+        
+        return $rendered;
+    }
+    
+    /**
+     * Creates and stores a Mustache instance.
+     */
+    protected function createMustache () {
+        if ( !is_null($this->mustache) ) return;
+        
+        if ( !is_null(self::$mustacheDirectory) ) {
+            
+            if ( file_exists(self::$mustacheDirectory . '/Mustache.php') ) {
+                // Mustache 1.x
+                require_once self::$mustacheDirectory . '/Mustache.php';
+            } else {
+                // Mustache 2.x
+                require_once self::$mustacheDirectory . '/Autoloader.php';
+                Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
+            }
+            
+        }
+        
+        if ( class_exists('Mustache') ) {
+            
+            // Mustache 1.x
+            $this->mustache = new Mustache();
+            
+            // Add support for the fixed-partials branch of Mustache 1.x
+            if ( method_exists($this->mustache, "_setTemplateBase") ) $this->mustache->_setTemplateBase($this->getTemplatesDirectory());
+            
+        } else {
+            
             // Mustache 2.x
             $loader = new Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory());
-            $m = new Mustache_Engine( array(
+            $this->mustache = new Mustache_Engine( array(
                 'loader' => $loader,
                 'partials_loader' => $loader
             ) );
-
-            return $m->render(ltrim($template, '/'), $this->data);
+            
         }
+    }
+    
+    /**
+     * @return integer
+     */
+    protected function getMustacheMajorVersion () {
+        if ( $this->mustache instanceof Mustache ) {
+            $version = 1;
+        } elseif( $this->mustache instanceof Mustache_Engine ) {
+            $version = 2;
+        } else {
+            throw new RuntimeException('Unknown version of Mustache');
+        }
+        
+        return $version;
     }
 }
 
