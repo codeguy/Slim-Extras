@@ -29,37 +29,60 @@
  */
 
 /**
- * BlitzView
+ * View_H2o
  *
- * The BlitzView provides native support for the Blitz templating system
- * for PHP. Blitz is written as C and compiled to a PHP extension. Which means
- * it is FAST. You can learn more about Blitz at:
+ * The H2oView is a custom View class which provides support for the H2o templating system (http://www.h2o-template.org).
  *
- * <http://alexeyrybak.com/blitz/blitz_en.html>
- *
- * The xBlitz extended blitz class provides better block handling
- * (load assoc arrays correctly, one level)
- *
- * @author Tobias O. <https://github.com/tobsn>
+ * @package Slim
+ * @author  Cenan Ozen <http://cenanozen.com/>
  */
-class xBlitz extends Blitz{function xblock($k,$a){foreach($a as $v){$this->block('/'.$k,$v,true);}}}
-class BlitzView extends Slim_View {
+class View_H2o extends Slim_View {
 
-    private $blitzEnvironment = null;
+	/**
+	 * @var string The path to the h2o.php WITH a trailing slash
+	 */
+	public $h2o_directory = '';
 
-    public function render( $template ) {
-        $env = $this->getEnvironment( $template );
-        return $env->parse( $this->getData() );
-    }
+	/**
+	 * @var array H2o options, see H2o documentation for reference
+	 */
+	public $h2o_options = array();
 
-    private function getEnvironment( $template ) {
-        if ( !$this->blitzEnvironment ) {
-            ini_set( 'blitz.path', $this->getTemplatesDirectory() . '/' );
-            $this->blitzEnvironment = new xBlitz( $template );
-        }
-        return $this->blitzEnvironment;
-    }
+	/**
+	 * Renders a template using h2o
+	 *
+	 * @param string $template template file name
+	 * @return string
+	 */
+	public function render($template) {
+		if ( ! array_key_exists('searchpath', $this->h2o_options)) {
+			$this->h2o_options['searchpath'] = $this->getTemplatesDirectory().'/';
+		}
+		
+		// Make sure H2o is loaded
+		$this->_load_h2o();
+		
+		$h2o = new H2o($template, $this->h2o_options);
+		return $h2o->render($this->data);
+	}
+
+	/**
+	 * Loads H2o library if it is not already loaded
+	 * 
+	 * @access private
+	 * @throws RuntimeException if h2o directory doesn't exist
+	 * @return void
+	 */
+	private function _load_h2o() {
+		if (class_exists('H2o')) {
+			return;
+		}
+		
+		if ( ! is_dir($this->h2o_directory)) {
+			throw new RuntimeException('h2o directory is invalid');
+		}
+		require_once $this->h2o_directory . 'h2o.php';
+	}
 
 }
 
-?>

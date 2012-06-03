@@ -29,7 +29,7 @@
  */
 
 /**
- * TwigView
+ * View_Twig
  *
  * The TwigView is a custom View class that renders templates using the Twig
  * template language (http://www.twig-project.org/).
@@ -38,23 +38,23 @@
  * - twigDirectory
  * - twigOptions
  */
-class TwigView extends Slim_View {
+class View_Twig extends Slim_View {
 
     /**
      * @var string The path to the Twig code directory WITHOUT the trailing slash
      */
-    public static $twigDirectory = null;
+    public $twigDirectory = null;
 
     /**
      * @var array The options for the Twig environment, see
      * http://www.twig-project.org/book/03-Twig-for-Developers
      */
-    public static $twigOptions = array();
+    public $twigOptions = array();
 
     /**
      * @var TwigExtension The Twig extensions you want to load
      */
-    public static $twigExtensions = array();
+    public $twigExtensions = array();
 
     /**
      * @var TwigEnvironment The Twig environment for rendering templates.
@@ -84,14 +84,14 @@ class TwigView extends Slim_View {
         if ( !$this->twigEnvironment ) {
             // Check for Composer Package Autoloader class loading
             if (!class_exists('Twig_Autoloader')) {
-                require_once self::$twigDirectory . '/Autoloader.php';
+                require_once $this->twigDirectory . '/Autoloader.php';
             }
 
             Twig_Autoloader::register();
             $loader = new Twig_Loader_Filesystem($this->getTemplatesDirectory());
             $this->twigEnvironment = new Twig_Environment(
                 $loader,
-                self::$twigOptions
+                $this->twigOptions
             );
 
             // Check for Composer Package Autoloader class loading
@@ -103,7 +103,7 @@ class TwigView extends Slim_View {
             if (class_exists('Twig_Extensions_Autoloader')) {
                 Twig_Extensions_Autoloader::register();
 
-                foreach (self::$twigExtensions as $ext) {
+                foreach ($this->twigExtensions as $ext) {
                     $extension = is_object($ext) ? $ext : new $ext;
                     $this->twigEnvironment->addExtension($extension);
                 }
@@ -112,5 +112,3 @@ class TwigView extends Slim_View {
         return $this->twigEnvironment;
     }
 }
-
-?>
