@@ -15,7 +15,7 @@
  * USAGE
  *
  * $app = new Slim();
- * $app->add(new HttpDigestAuth('theUsername', 'thePassword'));
+ * $app->add(new Middleware_Auth_HttpDigest('theUsername', 'thePassword'));
  *
  * MIT LICENSE
  *
@@ -38,7 +38,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class HttpDigestAuth extends Slim_Middleware {
+class Middleware_Auth_HttpDigest extends Slim_Middleware {
     /**
      * @var string
      */
