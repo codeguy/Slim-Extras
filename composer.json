@@ -13,11 +13,11 @@
         },
         {
             "name": "Andrew Smith",
-            "email": "a.smith@silentworks.co.uk"
+            "email": "a.smith@silentworks.co.uk",
+            "homepage": "http://silentworks.co.uk/"
         }
     ],
     "require": {
-        "slim/slim": ">=1.6.0",
         "php": ">=5.2.0"
     },
     "autoload": {
