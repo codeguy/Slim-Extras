@@ -24,7 +24,7 @@ Here is some sample code for using PDO provider and securing some routes using r
 	    'dsn' => 'mysql:host=localhost;dbname=slimdev',
 	    'dbuser' => 'serverside',
 	    'dbpass' => 'password',
-	    'auth_type' => 'form',
+	    'auth.type' => 'form',
 	    'login.url' => '/',
 	    'security.urls' => array(
 	        array('path' => '/test'),

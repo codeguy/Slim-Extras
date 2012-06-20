@@ -56,7 +56,7 @@ class Middleware_Auth_Strong extends Slim_Middleware {
      */
     protected $settings = array(
         'login.url' => '/',
-        'auth_type' => 'http',
+        'auth.type' => 'http',
     );
 
     /**
@@ -82,7 +82,7 @@ class Middleware_Auth_Strong extends Slim_Middleware {
 
         // Authentication Initialised
         $auth = Strong::factory($this->config);
-        switch ($this->config['auth_type']) {
+        switch ($this->config['auth.type']) {
             case 'form':
                 $this->formauth($auth, $req);
             break;
