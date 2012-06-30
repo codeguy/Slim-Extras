@@ -23,8 +23,8 @@
     "autoload": {
         "psr-0": { 
             "Twig_Extensions_": "View/Extension/",
-            "Middleware_": "slim/extras/",
-            "View_": "slim/extras/"
+            "Middleware_": "",
+            "View_": ""
         }
     }
 }
