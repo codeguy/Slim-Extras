@@ -1,8 +1,8 @@
 {
     "name": "slim/extras",
     "type": "library",
-    "description": "Extras package for Slim Framework. Authentication Middlewares, Template Parser Views, etc...",
-    "keywords": ["templating","extensions","middleware"],
+    "description": "Extras package for Slim Framework. Authentication Middlewares, Log Writers, Template Parser Views, etc...",
+    "keywords": ["templating","extensions","middleware","loggers"],
     "homepage": "http://github.com/codeguy/Slim-Extras",
     "license": "MIT",
     "authors": [
@@ -13,17 +13,19 @@
         },
         {
             "name": "Andrew Smith",
-            "email": "a.smith@silentworks.co.uk"
+            "email": "a.smith@silentworks.co.uk",
+            "homepage": "http://silentworks.co.uk/"
         }
     ],
     "require": {
         "php": ">=5.2.0"
     },
     "autoload": {
-        "psr-0": { 
+        "psr-0": {
             "Twig_Extensions_": "View/Extension/",
-            "Middleware_": "slim/extras/",
-            "View_": "slim/extras/"
+            "Middleware_": "",
+            "View_": "",
+            "Log_": ""
         }
     }
 }
