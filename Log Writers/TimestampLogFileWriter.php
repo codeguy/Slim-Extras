@@ -84,9 +84,6 @@ class TimestampLogFileWriter {
 
         //Remove trailing slash from log path
         $this->settings['path'] = rtrim($this->settings['path'], DIRECTORY_SEPARATOR);
-
-        //Open resource handle to log file
-        $this->resource = fopen($this->settings['path'] . DIRECTORY_SEPARATOR . date($this->settings['name_format']), 'a');
     }
 
     /**
@@ -124,6 +121,11 @@ class TimestampLogFileWriter {
             date('c'),
             (string)$object
         ), $this->settings['message_format']);
+
+        //Open resource handle to log file
+        if (! $this->resource) {
+            $this->resource = fopen($this->settings['path'] . DIRECTORY_SEPARATOR . date($this->settings['name_format']), 'a');
+        }
 
         //Output to resource
         fwrite($this->resource, $message . PHP_EOL);
