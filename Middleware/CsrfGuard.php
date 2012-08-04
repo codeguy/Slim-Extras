@@ -57,7 +57,7 @@ class CsrfGuard extends Slim_Middleware {
         // Create token
         $env = $this->app->environment();
 
-        if ( PHP_SESSION_ACTIVE === session_status() ){
+        if ( "" === session_id() ){
             if ( ! isset( $_SESSION[ $this->key ] ) ){
                 $_SESSION[ $this->key ] = sha1( serialize( $_SERVER ) . rand( 0, 0xffffffff ) );
             }
