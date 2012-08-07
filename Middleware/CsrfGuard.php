@@ -75,7 +75,7 @@ class CsrfGuard extends Slim_Middleware {
         }
 
         // Assign to view
-        $this->app->view()->setData(array(
+        $this->app->view()->appendData(array(
             'csrf_key' => $this->key,
             'csrf_token' => $token,
         ));
