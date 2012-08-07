@@ -4,7 +4,6 @@
  * CsrfGuard
  *
  * This middleware provides protection from CSRF attacks
-
  * USAGE
  *
  * // Adding middleware
@@ -55,16 +54,14 @@ class CsrfGuard extends Slim_Middleware {
      */
     public function check() {
         // Create token
-        $env = $this->app->environment();
-
-        if ( "" === session_id() ){
+        if ( session_id() === "" ){
             if ( ! isset( $_SESSION[ $this->key ] ) ){
                 $_SESSION[ $this->key ] = sha1( serialize( $_SERVER ) . rand( 0, 0xffffffff ) );
             }
         } else {
             throw new Exception( "Session are required to use CSRF Guard" );
         }
-        $token = $_SESSION[ $this -> key ];
+        $token = $_SESSION[ $this->key ];
 
         // Validate
         if ( in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE')) ) {
@@ -81,5 +78,3 @@ class CsrfGuard extends Slim_Middleware {
         ));
     }
 }
-
-?>
