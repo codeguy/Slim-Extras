@@ -29,7 +29,7 @@
  */
 
 /**
- * SmartyView
+ * View_Smarty
  *
  * The SmartyView is a custom View class that renders templates using the Smarty
  * template language (http://www.smarty.net).
@@ -43,37 +43,37 @@
  * @package Slim
  * @author  Jose da Silva <http://josedasilva.net>
  */
-class SmartyView extends Slim_View {
+class View_Smarty extends Slim_View {
 
     /**
      * @var string The path to the Smarty code directory WITHOUT the trailing slash
      */
-    public static $smartyDirectory = null;
+    public $smartyDirectory = null;
 
     /**
      * @var string The path to the Smarty compiled templates folder WITHOUT the trailing slash
      */
-    public static $smartyCompileDirectory = null;
+    public $smartyCompileDirectory = null;
 
     /**
      * @var string The path to the Smarty cache folder WITHOUT the trailing slash
      */
-    public static $smartyCacheDirectory = null;
+    public $smartyCacheDirectory = null;
 
     /**
      * @var string The path to the templates folder WITHOUT the trailing slash
      */
-    public static $smartyTemplatesDirectory = 'templates';
+    public $smartyTemplatesDirectory = 'templates';
 
     /**
      * @var SmartyExtensions The Smarty extensions directory you want to load plugins from
      */
-    public static $smartyExtensions = array();
+    public $smartyExtensions = array();
 
     /**
      * @var persistent instance of the Smarty object
      */
-    private static $smartyInstance = null;
+    private $smartyInstance = null;
 
     /**
     * Render Smarty Template
@@ -85,7 +85,7 @@ class SmartyView extends Slim_View {
     */
 
     public function render( $template ) {
-        $instance = self::getInstance();
+        $instance = $this->getInstance();
         $instance->assign($this->data);
         return $instance->fetch($template);
     }
@@ -96,25 +96,25 @@ class SmartyView extends Slim_View {
      * @throws RuntimeException If Smarty lib directory does not exist
      * @return Smarty Instance
      */
-    public static function getInstance() {
-        if ( !(self::$smartyInstance instanceof Smarty) ) {
-            if ( !is_dir(self::$smartyDirectory) ) {
-                throw new RuntimeException('Cannot set the Smarty lib directory : ' . self::$smartyDirectory . '. Directory does not exist.');
+    public function getInstance() {
+        if ( !($this->smartyInstance instanceof Smarty) ) {
+            if ( !is_dir($this->smartyDirectory) ) {
+                throw new RuntimeException('Cannot set the Smarty lib directory : ' . $this->smartyDirectory . '. Directory does not exist.');
             }
-            require_once self::$smartyDirectory . '/Smarty.class.php';
-            self::$smartyInstance = new Smarty();
-            self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
-            if ( self::$smartyExtensions ) {
-                self::$smartyInstance->addPluginsDir(self::$smartyExtensions);
+            require_once $this->smartyDirectory . '/Smarty.class.php';
+            $this->smartyInstance = new Smarty();
+            $this->smartyInstance->template_dir = is_null($this->smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : $this->smartyTemplatesDirectory;
+            if ( $this->smartyExtensions ) {
+                $this->smartyInstance->addPluginsDir($this->smartyExtensions);
             }
-            if ( self::$smartyCompileDirectory ) {
-                self::$smartyInstance->compile_dir  = self::$smartyCompileDirectory;
+            if ( $this->smartyCompileDirectory ) {
+                $this->smartyInstance->compile_dir  = $this->smartyCompileDirectory;
             }
-            if ( self::$smartyCacheDirectory ) {
-                self::$smartyInstance->cache_dir  = self::$smartyCacheDirectory;
+            if ( $this->smartyCacheDirectory ) {
+                $this->smartyInstance->cache_dir  = $this->smartyCacheDirectory;
             }
         }
-        return self::$smartyInstance;
+        return $this->smartyInstance;
     }
 }
 

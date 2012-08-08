@@ -1,8 +1,8 @@
 {
     "name": "slim/extras",
     "type": "library",
-    "description": "Extras package for Slim Framework",
-    "keywords": ["templating","extensions"],
+    "description": "Extras package for Slim Framework. Authentication Middlewares, Template Parser Views, etc...",
+    "keywords": ["templating","extensions","middleware"],
     "homepage": "http://github.com/codeguy/Slim-Extras",
     "license": "MIT",
     "authors": [
@@ -20,6 +20,10 @@
         "php": ">=5.2.0"
     },
     "autoload": {
-        "psr-0": { "Twig_Extensions_": "Views/Extension/" }
+        "psr-0": { 
+            "Twig_Extensions_": "View/Extension/",
+            "Middleware_": "slim/extras/",
+            "View_": "slim/extras/"
+        }
     }
 }
