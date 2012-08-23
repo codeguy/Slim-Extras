@@ -20,6 +20,7 @@
         "php": ">=5.2.0"
     },
     "autoload": {
-        "psr-0": { "Twig_Extensions_": "Views/Extension/" }
+        "psr-0": { "Twig_Extensions_": "Views/Extension/" },
+        "classmap": ["Log Writers/", "Middleware/", "Views/"]
     }
 }
