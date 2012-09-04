@@ -124,7 +124,12 @@ class TimestampLogFileWriter {
 
         //Open resource handle to log file
         if (! $this->resource) {
-            $this->resource = fopen($this->settings['path'] . DIRECTORY_SEPARATOR . date($this->settings['name_format']), 'a');
+            $name = $this->settings['path'] . DIRECTORY_SEPARATOR . date($this->settings['name_format']);
+            $dir = pathinfo($name, PATHINFO_DIRNAME);
+            if (! is_dir($dir)) {
+                mkdir($dir, 0755, true/*recursive*/);
+            }
+            $this->resource = fopen($name, 'a');
         }
 
         //Output to resource
