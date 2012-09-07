@@ -67,7 +67,7 @@ class CsrfGuard extends Slim_Middleware {
         if ( in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE')) ) {
             $usertoken = $this->app->request()->post($this->key);
             if ( $token !== $usertoken ) {
-                $this->app->halt(400, 'Missing token');
+                session_destroy();
             }
         }
 
