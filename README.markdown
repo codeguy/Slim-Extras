@@ -1,16 +1,13 @@
-# Slim Framework for PHP 5 - Extras
+# Slim Framework Extras
 
-Slim is a micro PHP 5 framework that helps you quickly write simple yet powerful RESTful web applications.
-
-This repository contains supplemental files for the Slim Framework, such as custom views and plugins. I created this repository to keep the primary Slim Framework repository as light-weight as possible.
-
-[Visit the primary repository](http://www.github.com/codeguy/Slim)<br/>
-[Follow Slim on Twitter](http://www.twitter.com/slimphp)<br/>
-[Visit the official website](http://www.slimframework.com/)
+This repository contains extra resources that complement the Slim Framework, a PHP micro framework that helps
+you quickly write simple yet powerful web applications.
 
 ## Custom Views
 
-This repository contains custom View classes for the template frameworks listed below. To use any of these custom View classes, `require` the appropriate class in your Slim Framework bootstrap file and initialize your Slim application using an instance of the selected View class (see example below).
+This repository contains custom views for your Slim Framework applications. Custom views let you easily
+use popular third-party templating frameworks, like [Twig](http://twig.sensiolabs.org/) or
+[Smarty](http://www.smarty.net/), with your Slim Framework application.
 
 * Smarty
 * Twig
@@ -24,38 +21,63 @@ This repository contains custom View classes for the template frameworks listed 
 * Rain
 * H2o
 
-To learn how to write your own custom View class, visit the [Slim Framework documentation](https://github.com/codeguy/Slim/wiki/Slim-Framework-Documentation#custom-views).
-
-### How to use a custom View
+This example demonstrates how to use the custom Twig view in your Slim Framework application:
 
     <?php
-    //Require the Slim Framework
-    require_once 'Slim/Slim.php';
+    // Setup custom Twig view
+    $twigView = new \Slim\Extras\Views\Twig();
 
-    //Require the custom View
-    require_once 'SmartyView.php';
-
-    //Init Slim app with the custom View
-    $app = new Slim(array(
-        'view' => new SmartyView()
+    // Instantiate application
+    $app = new \Slim\Slim(array(
+        'view' => $twigView
     ));
 
-    //Implement the rest of your application
-    //...
-    ?>
+This example assumes you are autoloading dependencies using [Composer](http://getcomposer.org/). If you are not
+using Composer, you must manually `require` the custom view class before instantiating it.
 
-## Plugins
+Read the [Slim Framework documentation](http://docs.slimframework.com/pages/view-custom/) to learn how to write
+your own custom view.
 
-Coming soon...
+## Middleware
 
-## About the Author
+This repository also contains middleware for your Slim Framework application. This
+example demonstrates how to apply HTTP basic authentication to a Slim Framework application:
 
-The Slim Framework for PHP 5 is created and maintained by Josh Lockhart, a web developer by day at [New Media Campaigns](http://www.newmediacampaigns.com/), and a [hacker by night](http://github.com/codeguy).
+    <?php
+    $app = new \Slim\Slim();
+    $app->add(new \Slim\Extras\Middleware\HttpBasicAuth('username', 'password'));
 
-Slim is in active development, and test coverage is continually improving.
+This example assumes you are autoloading dependencies using [Composer](http://getcomposer.org/). If you are not
+using Composer, you must manually `require` the custom middleware class before instantiating it.
 
-## Open Source License
+## Log Writers
 
-The Slim Framework for PHP 5 and the additional resources in this repository are released under the MIT public license.
+This repository also contains custom log writers for your Slim Framwork application. This example
+demonstrates how to use the custom `DateTimeLogWriter` to write rolling log files from your Slim Framework application:
+
+    <?php
+    $app = new \Slim\Slim(array(
+        'log.writer' => new \Slim\Extras\Log\DateTimeFileWriter(array(
+            'path' => './logs',
+            'name_format' => 'Y-m-d',
+            'message_format' => '%label% - %date% - %message%'
+        ))
+    ));
+
+This example assumes you are autoloading dependencies using [Composer](http://getcomposer.org/). If you are not
+using Composer, you must manually `require` the log writer class before instantiating it.
+
+## Author
+
+The Slim Framework is created and maintained by [Josh Lockhart](https://www.joshlockhart.com). Josh is a senior
+web developer at [New Media Campaigns](http://www.newmediacampaigns.com/). Josh also created and maintains
+[PHP: The Right Way](http://www.phptherightway.com/), a popular movement in the PHP community to introduce new
+PHP programmers to best practices and good information.
+
+The Slim Framework Extras repository is maintained by [Andrew Smith](https://github.com/silentworks).
+
+## License
+
+The Slim Framework is released under the MIT public license.
 
 <http://www.slimframework.com/license>

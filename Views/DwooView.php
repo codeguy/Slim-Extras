@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * DwooView
@@ -41,8 +42,8 @@
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
  */
-class DwooView extends Slim_View {
-
+class Dwoo extends \Slim\View
+{
 	/**
 	 * @var string The path to the directory containing the Dwoo folder without trailing slash.
 	 */
@@ -65,8 +66,10 @@ class DwooView extends Slim_View {
 	 * @param string $template The template name specified in Slim::render()
 	 * @return string
 	 */
-	public function render( $template ) {
+	public function render($template)
+	{
 		$dwoo = $this->getInstance();
+
 		return $dwoo->get(self::$dwooTemplatesDirectory.$template, $this->data);
 	}
 
@@ -76,16 +79,16 @@ class DwooView extends Slim_View {
      * @throws RuntimeException If Dwoo lib directory does not exist.
 	 * @return DwooInstance
 	 */
-	private function getInstance() {
-		if ( !self::$dwooInstance ) {
-            if ( !is_dir(self::$dwooDirectory) ) {
+	private function getInstance()
+	{
+		if (!self::$dwooInstance) {
+            if (!is_dir(self::$dwooDirectory)) {
                 throw new RuntimeException('Cannot set the Dwoo lib directory : ' . self::$dwooDirectory . '. Directory does not exist.');
             }
 			require_once self::$dwooDirectory . '/dwooAutoload.php';
 			self::$dwooInstance = new Dwoo();
 		}
+
 		return self::$dwooInstance;
 	}
 }
-
-?>

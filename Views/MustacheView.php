@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * MustacheView
@@ -41,8 +42,8 @@
  * @package Slim
  * @author  Johnson Page <http://johnsonpage.org>
  */
-class MustacheView extends Slim_View {
-
+class Mustache extends \Slim\View
+{
     /**
      * @var string The path to the directory containing Mustache.php
      */
@@ -55,13 +56,12 @@ class MustacheView extends Slim_View {
      * @param string $template The template name specified in Slim::render()
      * @return string
      */
-    public function render( $template ) {
+    public function render($template)
+    {
         require_once self::$mustacheDirectory . '/Mustache.php';
         $m = new Mustache();
         $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
+
         return $m->render($contents, $this->data);
     }
-
 }
-
-?>

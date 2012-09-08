@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * HamlView
@@ -43,9 +44,8 @@
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
  */
-
-class HamlView extends Slim_View {
-
+class Haml extends \Slim\View
+{
 	/**
 	 * @var string The path to the directory containing the "HamlPHP" folder without trailing slash.
 	 */
@@ -61,7 +61,6 @@ class HamlView extends Slim_View {
 	 */
 	public static $hamlCacheDirectory = null;
 
-
 	/**
 	 * Renders a template using Haml.php.
 	 *
@@ -69,18 +68,16 @@ class HamlView extends Slim_View {
      * @throws RuntimeException If Haml lib directory does not exist.
 	 * @param string $template The template name specified in Slim::render()
 	 * @return string
-	 */	
-	public function render( $template ) {
-        if ( !is_dir(self::$hamlDirectory) ) {
+	 */
+	public function render($template)
+	{
+        if (!is_dir(self::$hamlDirectory)) {
             throw new RuntimeException('Cannot set the HamlPHP lib directory : ' . self::$hamlDirectory . '. Directory does not exist.');
         }
-
 		require_once self::$hamlDirectory . '/HamlPHP/HamlPHP.php';
 		require_once self::$hamlDirectory . '/HamlPHP/Storage/FileStorage.php';
-
 		$parser = new HamlPHP(new FileStorage(self::$hamlCacheDirectory));
+
 		return $parser->parseFile(self::$hamlTemplatesDirectory.$template, $this->data);
 	}
 }
-
-?>

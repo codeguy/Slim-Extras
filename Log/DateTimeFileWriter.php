@@ -43,7 +43,10 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class TimestampLogFileWriter {
+namespace Slim\Extras\Log;
+
+class DateTimeFileWriter
+{
     /**
      * @var resource
      */
@@ -74,7 +77,8 @@ class TimestampLogFileWriter {
      * @param   array $settings
      * @return  void
      */
-    public function __construct( $settings = array() ) {
+    public function __construct($settings = array())
+    {
         //Merge user settings
         $this->settings = array_merge(array(
             'path' => './logs',
@@ -93,20 +97,21 @@ class TimestampLogFileWriter {
      * @param   int   $level
      * @return  void
      */
-    public function write( $object, $level ) {
+    public function write($object, $level)
+    {
         //Determine label
         $label = 'DEBUG';
-        switch ( $level ) {
-            case 0:
+        switch ($level) {
+            case \Slim\Log::FATAL:
                 $label = 'FATAL';
                 break;
-            case 1:
+            case \Slim\Log::ERROR:
                 $label = 'ERROR';
                 break;
-            case 2:
+            case \Slim\Log::WARN:
                 $label = 'WARN';
                 break;
-            case 3:
+            case \Slim\Log::INFO:
                 $label = 'INFO';
                 break;
         }
@@ -123,7 +128,7 @@ class TimestampLogFileWriter {
         ), $this->settings['message_format']);
 
         //Open resource handle to log file
-        if (! $this->resource) {
+        if (!$this->resource) {
             $this->resource = fopen($this->settings['path'] . DIRECTORY_SEPARATOR . date($this->settings['name_format']), 'a');
         }
 

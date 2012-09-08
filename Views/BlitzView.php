@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * BlitzView
@@ -42,24 +43,34 @@
  *
  * @author Tobias O. <https://github.com/tobsn>
  */
-class xBlitz extends Blitz{function xblock($k,$a){foreach($a as $v){$this->block('/'.$k,$v,true);}}}
-class BlitzView extends Slim_View {
-
-    private $blitzEnvironment = null;
-
-    public function render( $template ) {
-        $env = $this->getEnvironment( $template );
-        return $env->parse( $this->getData() );
-    }
-
-    private function getEnvironment( $template ) {
-        if ( !$this->blitzEnvironment ) {
-            ini_set( 'blitz.path', $this->getTemplatesDirectory() . '/' );
-            $this->blitzEnvironment = new xBlitz( $template );
+class xBlitz extends \Blitz
+{
+    function xblock($k,$a)
+    {
+        foreach ($a as $v) {
+            $this->block('/' . $k, $v, true);
         }
-        return $this->blitzEnvironment;
     }
-
 }
 
-?>
+class Blitz extends \Slim\View
+{
+    private $blitzEnvironment = null;
+
+    public function render($template)
+    {
+        $env = $this->getEnvironment($template);
+
+        return $env->parse($this->getData());
+    }
+
+    private function getEnvironment($template)
+    {
+        if (!$this->blitzEnvironment) {
+            ini_set('blitz.path', $this->getTemplatesDirectory() . '/');
+            $this->blitzEnvironment = new xBlitz($template);
+        }
+
+        return $this->blitzEnvironment;
+    }
+}

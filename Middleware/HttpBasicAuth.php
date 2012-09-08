@@ -35,7 +35,10 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class HttpBasicAuth extends Slim_Middleware {
+namespace Slim\Extras\Middleware;
+
+class HttpBasicAuth extends \Slim\Middleware
+{
     /**
      * @var string
      */
@@ -57,9 +60,9 @@ class HttpBasicAuth extends Slim_Middleware {
      * @param   string  $username   The HTTP Authentication username
      * @param   string  $password   The HTTP Authentication password
      * @param   string  $realm      The HTTP Authentication realm
-     * @return  void
      */
-    public function __construct( $username, $password, $realm = 'Protected Area' ) {
+    public function __construct($username, $password, $realm = 'Protected Area')
+    {
         $this->username = $username;
         $this->password = $password;
         $this->realm = $realm;
@@ -71,15 +74,14 @@ class HttpBasicAuth extends Slim_Middleware {
      * This method will check the HTTP request headers for previous authentication. If
      * the request has already authenticated, the next middleware is called. Otherwise,
      * a 401 Authentication Required response is returned to the client.
-     *
-     * @return void
      */
-    public function call() {
+    public function call()
+    {
         $req = $this->app->request();
         $res = $this->app->response();
         $authUser = $req->headers('PHP_AUTH_USER');
         $authPass = $req->headers('PHP_AUTH_PW');
-        if ( $authUser && $authPass && $authUser === $this->username && $authPass === $this->password ) {
+        if ($authUser && $authPass && $authUser === $this->username && $authPass === $this->password) {
             $this->next->call();
         } else {
             $res->status(401);

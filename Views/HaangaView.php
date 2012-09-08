@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * HaangaView
@@ -50,12 +51,13 @@
  * @package Slim
  * @author  Isman Firmansyah
  */
-class HaangaView extends Slim_View {
-
+class Haanga extends \Slim\View
+{
     /**
      * Configure Haanga environment
      */
-    public function __construct( $haangaDir, $templatesDir, $compiledDir ) {
+    public function __construct($haangaDir, $templatesDir, $compiledDir)
+    {
         require_once $haangaDir . '/lib/Haanga.php';
         Haanga::configure(array(
             'template_dir' => $templatesDir,
@@ -71,8 +73,8 @@ class HaangaView extends Slim_View {
      * @param   string $template The path to the Haanga template, relative to the Haanga templates directory.
      * @return  string|NULL
      */
-    public function render( $template ) {
+    public function render($template)
+    {
         return Haanga::load($template, $this->data);
     }
 }
-?>

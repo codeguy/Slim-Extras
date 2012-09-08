@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * RainView
@@ -42,8 +43,8 @@
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
  */
-class RainView extends Slim_View {
-
+class Rain extends \Slim\View
+{
 	/**
 	 * @var string The path to the directory containing "rain.tpl.class.php" without trailing slash.
 	 */
@@ -71,9 +72,11 @@ class RainView extends Slim_View {
 	 * @param string $template The template name specified in Slim::render()
 	 * @return string
 	 */
-	public function render( $template ) {
+	public function render($template)
+	{
 		$rain = $this->getInstance();
 		$rain->assign($this->data);
+
 		return $rain->draw($template, $return_string = true);
 	}
 
@@ -83,9 +86,10 @@ class RainView extends Slim_View {
      * @throws RuntimeException If Rain lib directory does not exist.
 	 * @return RainInstance
 	 */
-	private function getInstance() {
-		if ( !self::$rainInstance ) {
-            if ( !is_dir(self::$rainDirectory) ) {
+	private function getInstance()
+	{
+		if (!self::$rainInstance) {
+            if (!is_dir(self::$rainDirectory)) {
                 throw new RuntimeException('Cannot set the Rain lib directory : ' . self::$rainDirectory . '. Directory does not exist.');
             }
 			require_once self::$rainDirectory . '/rain.tpl.class.php';
@@ -93,8 +97,7 @@ class RainView extends Slim_View {
 			raintpl::$cache_dir = self::$rainCacheDirectory;
 			self::$rainInstance = new raintpl();
 		}
+
 		return self::$rainInstance;
 	}
 }
-
-?>

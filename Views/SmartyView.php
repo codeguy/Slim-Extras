@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * SmartyView
@@ -43,8 +44,8 @@
  * @package Slim
  * @author  Jose da Silva <http://josedasilva.net>
  */
-class SmartyView extends Slim_View {
-
+class Smarty extends \Slim\View
+{
     /**
      * @var string The path to the Smarty code directory WITHOUT the trailing slash
      */
@@ -84,9 +85,11 @@ class SmartyView extends Slim_View {
     * @return   void
     */
 
-    public function render( $template ) {
+    public function render($template)
+    {
         $instance = self::getInstance();
         $instance->assign($this->data);
+
         return $instance->fetch($template);
     }
 
@@ -96,26 +99,26 @@ class SmartyView extends Slim_View {
      * @throws RuntimeException If Smarty lib directory does not exist
      * @return Smarty Instance
      */
-    public static function getInstance() {
-        if ( !(self::$smartyInstance instanceof Smarty) ) {
-            if ( !is_dir(self::$smartyDirectory) ) {
+    public static function getInstance()
+    {
+        if (!(self::$smartyInstance instanceof Smarty)) {
+            if (!is_dir(self::$smartyDirectory)) {
                 throw new RuntimeException('Cannot set the Smarty lib directory : ' . self::$smartyDirectory . '. Directory does not exist.');
             }
             require_once self::$smartyDirectory . '/Smarty.class.php';
             self::$smartyInstance = new Smarty();
             self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
-            if ( self::$smartyExtensions ) {
+            if (self::$smartyExtensions) {
                 self::$smartyInstance->addPluginsDir(self::$smartyExtensions);
             }
-            if ( self::$smartyCompileDirectory ) {
+            if (self::$smartyCompileDirectory) {
                 self::$smartyInstance->compile_dir  = self::$smartyCompileDirectory;
             }
-            if ( self::$smartyCacheDirectory ) {
+            if (self::$smartyCacheDirectory) {
                 self::$smartyInstance->cache_dir  = self::$smartyCacheDirectory;
             }
         }
+
         return self::$smartyInstance;
     }
 }
-
-?>
