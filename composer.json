@@ -1,8 +1,8 @@
 {
     "name": "slim/extras",
     "type": "library",
-    "description": "Extras package for Slim Framework",
-    "keywords": ["templating","extensions"],
+    "description": "Extras package for the Slim Framework",
+    "keywords": ["templating", "extensions"],
     "homepage": "http://github.com/codeguy/Slim-Extras",
     "license": "MIT",
     "authors": [
@@ -17,9 +17,14 @@
         }
     ],
     "require": {
-        "php": ">=5.2.0"
+        "slim/slim": ">=2.0.0",
+        "php": ">=5.3.0"
     },
     "autoload": {
-        "psr-0": { "Twig_Extensions_": "Views/Extension/" }
-    }
+        "psr-0": {
+            "Twig_Extensions_": "Views/Extension/",
+            "Slim\\Extras": "."
+        }
+    },
+    "target-dir": "Slim/Extras"
 }

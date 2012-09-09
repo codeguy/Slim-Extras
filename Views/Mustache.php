@@ -27,62 +27,41 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
- * H2oView
+ * MustacheView
  *
- * The H2oView is a custom View class which provides support for the H2o templating system (http://www.h2o-template.org).
+ * The MustacheView is a Custom View class that renders templates using the
+ * Mustache template language (http://mustache.github.com/) and the
+ * [Mustache.php library](github.com/bobthecow/mustache.php).
+ *
+ * There is one field that you, the developer, will need to change:
+ * - mustacheDirectory
  *
  * @package Slim
- * @author  Cenan Ozen <http://cenanozen.com/>
+ * @author  Johnson Page <http://johnsonpage.org>
  */
-class H2oView extends Slim_View {
+class Mustache extends \Slim\View
+{
+    /**
+     * @var string The path to the directory containing Mustache.php
+     */
+    public static $mustacheDirectory = null;
 
-	/**
-	 * @var string The path to the h2o.php WITH a trailing slash
-	 */
-	public static $h2o_directory = '';
+    /**
+     * Renders a template using Mustache.php.
+     *
+     * @see View::render()
+     * @param string $template The template name specified in Slim::render()
+     * @return string
+     */
+    public function render($template)
+    {
+        require_once self::$mustacheDirectory . '/Mustache.php';
+        $m = new Mustache();
+        $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
 
-	/**
-	 * @var array H2o options, see H2o documentation for reference
-	 */
-	public static $h2o_options = array();
-
-	/**
-	 * Renders a template using h2o
-	 *
-	 * @param string $template template file name
-	 * @return string
-	 */
-	public function render($template) {
-		if ( ! array_key_exists('searchpath', self::$h2o_options)) {
-			self::$h2o_options['searchpath'] = $this->getTemplatesDirectory().'/';
-		}
-		
-		// Make sure H2o is loaded
-		$this->_load_h2o();
-		
-		$h2o = new H2o($template, self::$h2o_options);
-		return $h2o->render($this->data);
-	}
-
-	/**
-	 * Loads H2o library if it is not already loaded
-	 * 
-	 * @access private
-	 * @throws RuntimeException if h2o directory doesn't exist
-	 * @return void
-	 */
-	private function _load_h2o() {
-		if (class_exists('H2o')) {
-			return;
-		}
-		
-		if ( ! is_dir(self::$h2o_directory)) {
-			throw new RuntimeException('h2o directory is invalid');
-		}
-		require_once self::$h2o_directory . 'h2o.php';
-	}
-
+        return $m->render($contents, $this->data);
+    }
 }
-

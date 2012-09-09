@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * TwigView
@@ -38,8 +39,8 @@
  * - twigDirectory
  * - twigOptions
  */
-class TwigView extends Slim_View {
-
+class Twig extends \Slim\View
+{
     /**
      * @var string The path to the Twig code directory WITHOUT the trailing slash
      */
@@ -69,9 +70,11 @@ class TwigView extends Slim_View {
      * @param   string $template The path to the Twig template, relative to the Twig templates directory.
      * @return  void
      */
-    public function render( $template ) {
+    public function render($template)
+    {
         $env = $this->getEnvironment();
         $template = $env->loadTemplate($template);
+
         return $template->render($this->data);
     }
 
@@ -80,8 +83,9 @@ class TwigView extends Slim_View {
      *
      * @return Twig_Environment
      */
-    public function getEnvironment() {
-        if ( !$this->twigEnvironment ) {
+    public function getEnvironment()
+    {
+        if (!$this->twigEnvironment) {
             // Check for Composer Package Autoloader class loading
             if (!class_exists('Twig_Autoloader')) {
                 require_once self::$twigDirectory . '/Autoloader.php';
@@ -104,12 +108,12 @@ class TwigView extends Slim_View {
                 Twig_Extensions_Autoloader::register();
 
                 foreach (self::$twigExtensions as $ext) {
-                    $this->twigEnvironment->addExtension(new $ext);
+                    $extension = is_object($ext) ? $ext : new $ext;
+                    $this->twigEnvironment->addExtension($extension);
                 }
             }
         }
+
         return $this->twigEnvironment;
     }
 }
-
-?>
