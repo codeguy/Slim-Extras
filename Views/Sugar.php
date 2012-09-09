@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * SugarView
@@ -42,8 +43,8 @@
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
  */
-class SugarView extends Slim_View {
-
+class Sugar extends \Slim\View
+{
 	/**
 	 * @var string The path to the directory containing the Sugar folder without trailing slash.
 	 */
@@ -71,12 +72,14 @@ class SugarView extends Slim_View {
 	 * @param string $template The template name specified in Slim::render()
 	 * @return string
 	 */
-	public function render( $template ) {
+	public function render($template)
+	{
 		$sugar = $this->getInstance();
 		$template = $sugar->getTemplate($template);
-		foreach($this->data as $key => $value){
+		foreach ($this->data as $key => $value) {
 			$template->set($key, $value);
 		}
+
 		return $template->fetch();
 	}
 
@@ -86,9 +89,10 @@ class SugarView extends Slim_View {
      * @throws RuntimeException If Sugar lib directory does not exist.
 	 * @return SugarInstance
 	 */
-	private function getInstance() {
-		if ( !self::$sugarInstance ) {
-            if ( !is_dir(self::$sugarDirectory) ) {
+	private function getInstance()
+	{
+		if (!self::$sugarInstance) {
+            if (!is_dir(self::$sugarDirectory)) {
                 throw new RuntimeException('Cannot set the Sugar lib directory : ' . self::$sugarDirectory . '. Directory does not exist.');
             }
 			require_once self::$sugarDirectory . '/Sugar.php';
@@ -96,8 +100,7 @@ class SugarView extends Slim_View {
 			self::$sugarInstance->templateDir = self::$sugarTemplatesDirectory;
 			self::$sugarInstance->cacheDir = self::$sugarCacheDirectory;
 		}
+
 		return self::$sugarInstance;
 	}
 }
-
-?>

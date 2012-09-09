@@ -38,7 +38,10 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class HttpDigestAuth extends Slim_Middleware {
+namespace Slim\Extras\Middleware;
+
+class HttpDigestAuth extends \Slim\Middleware
+{
     /**
      * @var string
      */
@@ -62,7 +65,8 @@ class HttpDigestAuth extends Slim_Middleware {
      * @param   string  $realm      The HTTP Authentication realm
      * @return  void
      */
-    public function __construct( $username, $password, $realm = 'Protected Area' ) {
+    public function __construct($username, $password, $realm = 'Protected Area')
+    {
         $this->username = $username;
         $this->password = $password;
         $this->realm = $realm;
@@ -77,14 +81,15 @@ class HttpDigestAuth extends Slim_Middleware {
      *
      * @return void
      */
-    public function call() {
+    public function call()
+    {
         //Check header and header username
-        if ( empty($_SERVER['PHP_AUTH_DIGEST']) ) {
+        if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
             $this->fail();
             return;
         } else {
             $data = $this->parseHttpDigest($_SERVER['PHP_AUTH_DIGEST']);
-            if ( !$data || $data['username'] !== $this->username ) {
+            if (!$data || $data['username'] !== $this->username) {
                 $this->fail();
                 return;
             }
@@ -94,7 +99,7 @@ class HttpDigestAuth extends Slim_Middleware {
         $A1 = md5($data['username'] . ':' . $this->realm . ':' . $this->password);
         $A2 = md5($_SERVER['REQUEST_METHOD'] . ':' . $data['uri']);
         $validResponse = md5($A1 . ':' . $data['nonce'] . ':' . $data['nc'] . ':' . $data['cnonce'] . ':' . $data['qop'] . ':' . $A2);
-        if ( $data['response'] !== $validResponse ) {
+        if ($data['response'] !== $validResponse) {
             $this->fail();
             return;
         }
@@ -108,9 +113,18 @@ class HttpDigestAuth extends Slim_Middleware {
      *
      * @return void
      */
-    protected function fail() {
+    protected function fail()
+    {
         $this->app->response()->status(401);
-        $this->app->response()->header('WWW-Authenticate', sprintf('Digest realm="%s",qop="auth",nonce="%s",opaque="%s"', $this->realm, uniqid(), md5($this->realm)));
+        $this->app->response()->header(
+            'WWW-Authenticate',
+            sprintf(
+                'Digest realm="%s",qop="auth",nonce="%s",opaque="%s"',
+                $this->realm,
+                uniqid(),
+                md5($this->realm)
+            )
+        );
     }
 
     /**
@@ -118,15 +132,25 @@ class HttpDigestAuth extends Slim_Middleware {
      *
      * @return array|false
      */
-    protected function parseHttpDigest( $headerValue ) {
-        $needed_parts = array('nonce' => 1, 'nc' => 1, 'cnonce' => 1, 'qop' => 1, 'username' => 1, 'uri' => 1, 'response' => 1);
+    protected function parseHttpDigest($headerValue)
+    {
+        $needed_parts = array(
+            'nonce' => 1,
+            'nc' => 1,
+            'cnonce' => 1,
+            'qop' => 1,
+            'username' => 1,
+            'uri' => 1,
+            'response' => 1
+        );
         $data = array();
         $keys = implode('|', array_keys($needed_parts));
         preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $headerValue, $matches, PREG_SET_ORDER);
-        foreach ( $matches as $m ) {
+        foreach ($matches as $m) {
             $data[$m[1]] = $m[3] ? $m[3] : $m[4];
             unset($needed_parts[$m[1]]);
         }
+
         return $needed_parts ? false : $data;
     }
 }

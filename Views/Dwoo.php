@@ -27,60 +27,68 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
- * HamlView
+ * DwooView
  *
- * The HamlView is a Custom View class that renders templates using the
- * HAML template language (http://haml-lang.com/) through the use of
- * HamlPHP (https://github.com/sniemela/HamlPHP).
+ * The DwooView is a Custom View class that renders templates using the
+ * Dwoo template language (http://dwoo.org/).
  *
- * There are three field that you, the developer, will need to change:
- * - hamlDirectory
- * - hamlTemplatesDirectory
- * - hamlCacheDirectory
+ * There are two fields that you, the developer, will need to change:
+ * - dwooDirectory
+ * - dwooTemplatesDirectory
  *
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
  */
-
-class HamlView extends Slim_View {
+class Dwoo extends \Slim\View
+{
+	/**
+	 * @var string The path to the directory containing the Dwoo folder without trailing slash.
+	 */
+	public static $dwooDirectory = null;
 
 	/**
-	 * @var string The path to the directory containing the "HamlPHP" folder without trailing slash.
+	 * @var persistent instance of the Smarty object
 	 */
-	public static $hamlDirectory = null;
+	private static $dwooInstance = null;
 
 	/**
 	 * @var string The path to the templates folder WITH the trailing slash
 	 */
-	public static $hamlTemplatesDirectory = 'templates/';
+	public static $dwooTemplatesDirectory = 'templates';
 
 	/**
-	 * @var string The path to the templates folder WITH the trailing slash
-	 */
-	public static $hamlCacheDirectory = null;
-
-
-	/**
-	 * Renders a template using Haml.php.
+	 * Renders a template using Dwoo.php.
 	 *
 	 * @see View::render()
-     * @throws RuntimeException If Haml lib directory does not exist.
 	 * @param string $template The template name specified in Slim::render()
 	 * @return string
-	 */	
-	public function render( $template ) {
-        if ( !is_dir(self::$hamlDirectory) ) {
-            throw new RuntimeException('Cannot set the HamlPHP lib directory : ' . self::$hamlDirectory . '. Directory does not exist.');
-        }
+	 */
+	public function render($template)
+	{
+		$dwoo = $this->getInstance();
 
-		require_once self::$hamlDirectory . '/HamlPHP/HamlPHP.php';
-		require_once self::$hamlDirectory . '/HamlPHP/Storage/FileStorage.php';
+		return $dwoo->get(self::$dwooTemplatesDirectory.$template, $this->data);
+	}
 
-		$parser = new HamlPHP(new FileStorage(self::$hamlCacheDirectory));
-		return $parser->parseFile(self::$hamlTemplatesDirectory.$template, $this->data);
+	/**
+	 * Creates new Dwoo instance if it doesn't already exist, and returns it.
+	 *
+     * @throws RuntimeException If Dwoo lib directory does not exist.
+	 * @return DwooInstance
+	 */
+	private function getInstance()
+	{
+		if (!self::$dwooInstance) {
+            if (!is_dir(self::$dwooDirectory)) {
+                throw new RuntimeException('Cannot set the Dwoo lib directory : ' . self::$dwooDirectory . '. Directory does not exist.');
+            }
+			require_once self::$dwooDirectory . '/dwooAutoload.php';
+			self::$dwooInstance = new Dwoo();
+		}
+
+		return self::$dwooInstance;
 	}
 }
-
-?>

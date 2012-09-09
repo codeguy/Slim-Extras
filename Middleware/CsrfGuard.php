@@ -1,4 +1,5 @@
 <?php
+namespace Slim\Extras\Middleware;
 
 /**
  * CsrfGuard
@@ -16,7 +17,8 @@
  * @author Mikhail Osher, https://github.com/miraage
  * @version 1.0
  */
-class CsrfGuard extends Slim_Middleware {
+class CsrfGuard extends \Slim\Middleware
+{
     /**
      * Request key
      *
@@ -29,9 +31,10 @@ class CsrfGuard extends Slim_Middleware {
      *
      * @param string $key Request key
      */
-    public function __construct( $key = 'csrf_token' ) {
+    public function __construct($key = 'csrf_token')
+    {
         // Validate key (i won't use htmlspecialchars)
-        if ( !is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key) ) {
+        if (!is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
             throw new OutOfBoundsException('Invalid key' . $key);
         }
 
@@ -41,7 +44,8 @@ class CsrfGuard extends Slim_Middleware {
     /**
      * Call middleware
      */
-    public function call() {
+    public function call()
+    {
         // Attach as hook
         $this->app->hook('slim.before', array($this, 'check'));
 
@@ -52,21 +56,22 @@ class CsrfGuard extends Slim_Middleware {
     /**
      * Check token
      */
-    public function check() {
+    public function check()
+    {
         // Create token
-        if ( session_id() !== "" ){
-            if ( ! isset( $_SESSION[ $this->key ] ) ){
-                $_SESSION[ $this->key ] = sha1( serialize( $_SERVER ) . rand( 0, 0xffffffff ) );
+        if (session_id() !== "") {
+            if (!isset($_SESSION[$this->key])) {
+                $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
             }
         } else {
             throw new Exception( "Session are required to use CSRF Guard" );
         }
-        $token = $_SESSION[ $this->key ];
+        $token = $_SESSION[$this->key];
 
         // Validate
-        if ( in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE')) ) {
+        if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
             $usertoken = $this->app->request()->post($this->key);
-            if ( $token !== $usertoken ) {
+            if ($token !== $usertoken) {
                 $this->app->halt(400, 'Missing token');
             }
         }

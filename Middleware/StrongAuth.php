@@ -35,7 +35,10 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class StrongAuth extends Slim_Middleware {
+namespace Slim\Extras\Middleware;
+
+class StrongAuth extends \Slim\Middleware
+{
     /**
      * @var string
      */
@@ -65,7 +68,8 @@ class StrongAuth extends Slim_Middleware {
      * @param   array  $config   Configuration for Strong and Login Details
      * @return  void
      */
-    public function __construct(array $config = array()) {
+    public function __construct(array $config = array())
+    {
         $this->config = array_merge($this->settings, $config);
     }
 
@@ -74,10 +78,10 @@ class StrongAuth extends Slim_Middleware {
      *
      * @return void
      */
-    public function call() {
+    public function call()
+    {
         $app = $this->app;
         $config = $this->config;
-
         $req = $this->app->request();
 
         // Authentication Initialised
@@ -85,23 +89,23 @@ class StrongAuth extends Slim_Middleware {
         switch ($this->config['auth_type']) {
             case 'form':
                 $this->formauth($auth, $req);
-            break;
+                break;
             default:
                 $this->httpauth($auth, $req);
-            break;
+                break;
         }
     }
 
     /**
      * Form based authentication
-     * 
+     *
      * @param Strong $auth
      * @param object $req
      */
-    private function formauth(Strong $auth, $req) {
+    private function formauth(Strong $auth, $req)
+    {
         $app = $this->app;
         $config = $this->config;
-
         $this->app->hook('slim.before.router', function () use ($app, $auth, $req, $config) {
             $secured_urls = isset($config['security.urls']) ? $config['security.urls'] : array();
             foreach ($secured_urls as $surl) {
@@ -120,26 +124,27 @@ class StrongAuth extends Slim_Middleware {
                 }
             }
         });
-        
+
         $this->next->call();
     }
 
     /**
      * HTTPAuth based authentication
-     * 
+     *
      * This method will check the HTTP request headers for previous authentication. If
      * the request has already authenticated, the next middleware is called. Otherwise,
      * a 401 Authentication Required response is returned to the client.
-     * 
-     * @param Strong $auth 
+     *
+     * @param Strong $auth
      * @param object $req
      */
-    private function httpauth(Strong $auth, $req) {
+    private function httpauth(Strong $auth, $req)
+    {
         $res = $this->app->response();
         $authUser = $req->headers('PHP_AUTH_USER');
         $authPass = $req->headers('PHP_AUTH_PW');
 
-        if ( $authUser && $authPass && $auth->login($authUser, $authPass) ) {
+        if ($authUser && $authPass && $auth->login($authUser, $authPass)) {
             $this->next->call();
         } else {
             $res->status(401);

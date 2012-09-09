@@ -27,6 +27,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+namespace Slim\Extras\Views;
 
 /**
  * SavantView
@@ -41,8 +42,8 @@
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
  */
-class SavantView extends Slim_View {
-
+class Savant extends \Slim\View
+{
 	/**
 	 * @var string The path to the directory containing Savant3.php and the Savant3 folder without trailing slash.
 	 */
@@ -65,9 +66,11 @@ class SavantView extends Slim_View {
 	 * @param string $template The template name specified in Slim::render()
 	 * @return string
 	 */
-	public function render( $template ) {
+	public function render($template)
+	{
 		$savant = $this->getInstance();
 		$savant->assign($this->data);
+
 		return $savant->fetch($template);
 	}
 
@@ -77,16 +80,16 @@ class SavantView extends Slim_View {
      * @throws RuntimeException If Savant3 lib directory does not exist.
 	 * @return SavantInstance
 	 */
-	private function getInstance() {
-		if ( !self::$savantInstance ) {
-            if ( !is_dir(self::$savantDirectory) ) {
+	private function getInstance()
+	{
+		if (!self::$savantInstance) {
+            if (!is_dir(self::$savantDirectory)) {
                 throw new RuntimeException('Cannot set the Savant lib directory : ' . self::$savantDirectory . '. Directory does not exist.');
             }
 			require_once self::$savantDirectory . '/Savant3.php';
 			self::$savantInstance = new Savant3(self::$savantOptions);
 		}
+
 		return self::$savantInstance;
 	}
 }
-
-?>
