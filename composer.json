@@ -25,5 +25,6 @@
             "Twig_Extensions_": "Views/Extension/",
             "Slim\\Extras": "."
         }
-    }
+    },
+    "target-dir": "Slim/Extras"
 }
