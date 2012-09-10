@@ -14,8 +14,11 @@ library. You can use the Twig custom view in your Slim Framework application lik
 		'view' => new \Slim\Extras\Views\Twig()
 	));
 
-You will need to configure the Twig view's public `$twigOptions` and `$twigDirectory` properties. The `$twigDirectory`
-property is the relative or absolute path to the Twig library. The `$twigOptions` property is an array of Twig settings.
+If you are not using Composer to autoload project dependencies, you must also set the Twig view's public static
+`$twigDirectory` property; this is the relative or absolute path to the directory that conatins the Twig library.
+
+You may also set the public static `$twigOptions` property; this is an array of settings that customize the Twig
+library behavior.
 
 ## Mustache
 
