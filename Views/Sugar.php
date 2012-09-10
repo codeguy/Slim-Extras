@@ -93,10 +93,10 @@ class Sugar extends \Slim\View
 	{
 		if (!self::$sugarInstance) {
             if (!is_dir(self::$sugarDirectory)) {
-                throw new RuntimeException('Cannot set the Sugar lib directory : ' . self::$sugarDirectory . '. Directory does not exist.');
+                throw new \RuntimeException('Cannot set the Sugar lib directory : ' . self::$sugarDirectory . '. Directory does not exist.');
             }
 			require_once self::$sugarDirectory . '/Sugar.php';
-			self::$sugarInstance = new Sugar();
+			self::$sugarInstance = new \Sugar();
 			self::$sugarInstance->templateDir = self::$sugarTemplatesDirectory;
 			self::$sugarInstance->cacheDir = self::$sugarCacheDirectory;
 		}

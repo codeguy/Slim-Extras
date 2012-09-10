@@ -13,7 +13,7 @@ function smarty_function_urlFor($params, $template)
 	$name = isset($params['name']) ? $params['name'] : '';
     $appName = isset($params['appname']) ? $params['appname'] : 'default';
 
-	$url = Slim::getInstance($appName)->urlFor($name);
+	$url = \Slim\Slim::getInstance($appName)->urlFor($name);
 
 	if (isset($params['options']))
 	{
@@ -23,7 +23,7 @@ function smarty_function_urlFor($params, $template)
 			$opts[$key] = $value;
 		}
 
-		$url = Slim::getInstance($appName)->urlFor($name, $opts);
+		$url = \Slim\Slim::getInstance($appName)->urlFor($name, $opts);
 	}
 
 	return $url;

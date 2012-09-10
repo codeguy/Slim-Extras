@@ -61,7 +61,7 @@ class H2o extends \Slim\View
 			self::$h2o_options['searchpath'] = $this->getTemplatesDirectory() . '/';
 		}
 		$this->_load_h2o();
-		$h2o = new H2o($template, self::$h2o_options);
+		$h2o = new \H2o($template, self::$h2o_options);
 
 		return $h2o->render($this->data);
 	}
@@ -75,11 +75,11 @@ class H2o extends \Slim\View
 	 */
 	private function _load_h2o()
 	{
-		if (class_exists('H2o')) {
+		if (class_exists('\H2o')) {
 			return;
 		}
 		if (!is_dir(self::$h2o_directory)) {
-			throw new RuntimeException('h2o directory is invalid');
+			throw new \RuntimeException('h2o directory is invalid');
 		}
 		require_once self::$h2o_directory . 'h2o.php';
 	}
