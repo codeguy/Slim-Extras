@@ -68,6 +68,9 @@ class DateTimeFileWriter
      * name_format:
      * (string) The log file name format; parsed with `date()`.
      *
+     * extension:
+     * (string) The file extention to append to the filename`.     
+     *
      * message_format:
      * (string) The log message format; available tokens are...
      *     %label%      Replaced with the log message level (e.g. FATAL, ERROR, WARN).
@@ -83,6 +86,7 @@ class DateTimeFileWriter
         $this->settings = array_merge(array(
             'path' => './logs',
             'name_format' => 'Y-m-d',
+            'extension' => 'log',
             'message_format' => '%label% - %date% - %message%'
         ), $settings);
 
@@ -129,7 +133,12 @@ class DateTimeFileWriter
 
         //Open resource handle to log file
         if (!$this->resource) {
-            $this->resource = fopen($this->settings['path'] . DIRECTORY_SEPARATOR . date($this->settings['name_format']), 'a');
+            $filename = date($this->settings['name_format']);
+            if (! empty($this->settings['extension'])) {
+                $filename .= '.' . $this->settings['extension'];
+            }
+
+            $this->resource = fopen($this->settings['path'] . DIRECTORY_SEPARATOR . $filename, 'a');
         }
 
         //Output to resource
