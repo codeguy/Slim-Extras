@@ -4,25 +4,34 @@ namespace Slim\Extras\Middleware;
 class CsrfGuard extends \Slim\Middleware
 {
     /**
-	 * CSRF token key.
+	 * CSRF token key name.
 	 *
 	 * @var string
 	 */
 	protected $key;
 
+    /**
+	 * CSRF graceful.
+	 *
+	 * @var string
+	 */
+	protected $graceful;	
+
 	/**
 	 * Constructor.
 	 *
-	 * @param string $key CSRF token key.
+	 * @param boolean 	$graceful 	If true then destroy the session (graceful), otherwise halt the application (ungraceful).
+	 * @param string 	$key 		The CSRF token key name.
 	 * @return void
 	 */
-	public function __construct($key = 'csrf_token') 
+	public function __construct($graceful = false, $key = 'csrf_token')
 	{
 		if (! is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
 			throw new \OutOfBoundsException('Invalid CSRF token key "' . $key . '"');
 		}
 
 		$this->key = $key;
+		$this->graceful = (bool) $graceful;
 	}
 
 	/**
@@ -61,7 +70,11 @@ class CsrfGuard extends \Slim\Middleware
 		if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
             $userToken = $this->app->request()->post($this->key);
             if ($token !== $userToken) {
-                session_destroy();
+            	if (! $this->graceful) {
+            		$this->app->halt(400, 'Invalid or missing CSRF token.');
+            	} else {
+            		session_destroy();	
+            	}
             }
 		}
 
