@@ -87,25 +87,25 @@ class Twig extends \Slim\View
     {
         if (!$this->twigEnvironment) {
             // Check for Composer Package Autoloader class loading
-            if (!class_exists('Twig_Autoloader')) {
+            if (!class_exists('\Twig_Autoloader')) {
                 require_once self::$twigDirectory . '/Autoloader.php';
             }
 
-            Twig_Autoloader::register();
-            $loader = new Twig_Loader_Filesystem($this->getTemplatesDirectory());
-            $this->twigEnvironment = new Twig_Environment(
+            \Twig_Autoloader::register();
+            $loader = new \Twig_Loader_Filesystem($this->getTemplatesDirectory());
+            $this->twigEnvironment = new \Twig_Environment(
                 $loader,
                 self::$twigOptions
             );
 
             // Check for Composer Package Autoloader class loading
-            if (!class_exists('Twig_Extensions_Autoloader')) {
+            if (!class_exists('\Twig_Extensions_Autoloader')) {
                 $extension_autoloader = dirname(__FILE__) . '/Extension/TwigAutoloader.php';
                 if (file_exists($extension_autoloader)) require_once $extension_autoloader;
             }
 
-            if (class_exists('Twig_Extensions_Autoloader')) {
-                Twig_Extensions_Autoloader::register();
+            if (class_exists('\Twig_Extensions_Autoloader')) {
+                \Twig_Extensions_Autoloader::register();
 
                 foreach (self::$twigExtensions as $ext) {
                     $extension = is_object($ext) ? $ext : new $ext;

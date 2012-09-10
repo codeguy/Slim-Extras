@@ -84,10 +84,10 @@ class Savant extends \Slim\View
 	{
 		if (!self::$savantInstance) {
             if (!is_dir(self::$savantDirectory)) {
-                throw new RuntimeException('Cannot set the Savant lib directory : ' . self::$savantDirectory . '. Directory does not exist.');
+                throw new \RuntimeException('Cannot set the Savant lib directory : ' . self::$savantDirectory . '. Directory does not exist.');
             }
 			require_once self::$savantDirectory . '/Savant3.php';
-			self::$savantInstance = new Savant3(self::$savantOptions);
+			self::$savantInstance = new \Savant3(self::$savantOptions);
 		}
 
 		return self::$savantInstance;

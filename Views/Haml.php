@@ -72,12 +72,12 @@ class Haml extends \Slim\View
 	public function render($template)
 	{
         if (!is_dir(self::$hamlDirectory)) {
-            throw new RuntimeException('Cannot set the HamlPHP lib directory : ' . self::$hamlDirectory . '. Directory does not exist.');
+            throw new \RuntimeException('Cannot set the HamlPHP lib directory : ' . self::$hamlDirectory . '. Directory does not exist.');
         }
 		require_once self::$hamlDirectory . '/HamlPHP/HamlPHP.php';
 		require_once self::$hamlDirectory . '/HamlPHP/Storage/FileStorage.php';
-		$parser = new HamlPHP(new FileStorage(self::$hamlCacheDirectory));
+		$parser = new \HamlPHP(new \FileStorage(self::$hamlCacheDirectory));
 
-		return $parser->parseFile(self::$hamlTemplatesDirectory.$template, $this->data);
+		return $parser->parseFile(self::$hamlTemplatesDirectory . $template, $this->data);
 	}
 }

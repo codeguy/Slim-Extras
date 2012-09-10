@@ -83,10 +83,10 @@ class Dwoo extends \Slim\View
 	{
 		if (!self::$dwooInstance) {
             if (!is_dir(self::$dwooDirectory)) {
-                throw new RuntimeException('Cannot set the Dwoo lib directory : ' . self::$dwooDirectory . '. Directory does not exist.');
+                throw new \RuntimeException('Cannot set the Dwoo lib directory : ' . self::$dwooDirectory . '. Directory does not exist.');
             }
 			require_once self::$dwooDirectory . '/dwooAutoload.php';
-			self::$dwooInstance = new Dwoo();
+			self::$dwooInstance = new \Dwoo();
 		}
 
 		return self::$dwooInstance;

@@ -59,7 +59,7 @@ class Mustache extends \Slim\View
     public function render($template)
     {
         require_once self::$mustacheDirectory . '/Mustache.php';
-        $m = new Mustache();
+        $m = new \Mustache();
         $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
 
         return $m->render($contents, $this->data);

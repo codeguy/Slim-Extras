@@ -101,12 +101,12 @@ class Smarty extends \Slim\View
      */
     public static function getInstance()
     {
-        if (!(self::$smartyInstance instanceof Smarty)) {
+        if (!(self::$smartyInstance instanceof \Smarty)) {
             if (!is_dir(self::$smartyDirectory)) {
-                throw new RuntimeException('Cannot set the Smarty lib directory : ' . self::$smartyDirectory . '. Directory does not exist.');
+                throw new \RuntimeException('Cannot set the Smarty lib directory : ' . self::$smartyDirectory . '. Directory does not exist.');
             }
             require_once self::$smartyDirectory . '/Smarty.class.php';
-            self::$smartyInstance = new Smarty();
+            self::$smartyInstance = new \Smarty();
             self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
             if (self::$smartyExtensions) {
                 self::$smartyInstance->addPluginsDir(self::$smartyExtensions);
