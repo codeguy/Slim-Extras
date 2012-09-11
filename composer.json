@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Twig_Extensions_": "Views/Extension/",
+            "Twig_Extensions_": "Slim/Extras/Views/Extension/",
             "Slim\\Extras": "."
         }
     },
