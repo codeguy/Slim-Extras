@@ -1,85 +1,87 @@
 <?php
 namespace Slim\Extras\Middleware;
 
-/**
- * CsrfGuard
- *
- * This middleware provides protection from CSRF attacks
- * USAGE
- *
- * // Adding middleware
- * $app = new Slim();
- * $app->add(new CsrfGuard());
- *
- * // Setting token in view
- * <input type="hidden" name="<?=$csrf_key?>" value="<?=$csrf_token?>">
- *
- * @author Mikhail Osher, https://github.com/miraage
- * @version 1.0
- */
 class CsrfGuard extends \Slim\Middleware
 {
     /**
-     * Request key
-     *
-     * @var string
-     */
-    protected $key;
+	 * CSRF token key name.
+	 *
+	 * @var string
+	 */
+	protected $key;
 
     /**
-     * Constructor
-     *
-     * @param string $key Request key
-     */
-    public function __construct($key = 'csrf_token')
-    {
-        // Validate key (i won't use htmlspecialchars)
-        if (!is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
-            throw new OutOfBoundsException('Invalid key' . $key);
-        }
+	 * CSRF graceful.
+	 *
+	 * @var string
+	 */
+	protected $graceful;	
 
-        $this->key = $key;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param boolean 	$graceful 	If true then destroy the session (graceful), otherwise halt the application (ungraceful).
+	 * @param string 	$key 		The CSRF token key name.
+	 * @return void
+	 */
+	public function __construct($graceful = false, $key = 'csrf_token')
+	{
+		if (! is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
+			throw new \OutOfBoundsException('Invalid CSRF token key "' . $key . '"');
+		}
 
-    /**
-     * Call middleware
-     */
-    public function call()
-    {
-        // Attach as hook
-        $this->app->hook('slim.before', array($this, 'check'));
+		$this->key = $key;
+		$this->graceful = (bool) $graceful;
+	}
 
-        // Call next middleware
-        $this->next->call();
-    }
+	/**
+	 * Call middleware.
+	 *
+	 * @return void
+	 */
+	public function call() 
+	{
+		// Attach as hook.
+		$this->app->hook('slim.before', array($this, 'check'));
 
-    /**
-     * Check token
-     */
-    public function check()
-    {
-        // Create token
-        if (session_id() !== "") {
-            if (!isset($_SESSION[$this->key])) {
-                $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
+		// Call next middleware.
+		$this->next->call();
+	}
+
+	/**
+	 * Check CSRF token is valid.
+	 * Note: Also checks POST data to see if a Moneris RVAR CSRF token exists.
+	 *
+	 * @return void
+	 */
+	public function check() {
+		// Check sessions are enabled.
+		if (session_id() === '') {
+			throw new \Exception('Sessions are required to use the CSRF Guard middleware.');
+		}
+
+		if (! isset($_SESSION[$this->key])) {
+			$_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
+		}
+
+		$token = $_SESSION[$this->key];
+
+		// Validate the CSRF token.
+		if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
+            $userToken = $this->app->request()->post($this->key);
+            if ($token !== $userToken) {
+            	if (! $this->graceful) {
+            		$this->app->halt(400, 'Invalid or missing CSRF token.');
+            	} else {
+            		session_destroy();	
+            	}
             }
-        } else {
-            throw new Exception( "Session are required to use CSRF Guard" );
-        }
-        $token = $_SESSION[$this->key];
+		}
 
-        // Validate
-        if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
-            $usertoken = $this->app->request()->post($this->key);
-            if ($token !== $usertoken) {
-                $this->app->halt(400, 'Missing token');
-            }
-        }
-
-        // Assign to view
-        $this->app->view()->appendData(array(
-            'csrf_key' => $this->key,
-            'csrf_token' => $token,
-        ));
-    }
+		// Assign CSRF token key and value to view.
+		$this->app->view()->appendData(array(
+			'csrf_key' 		=> $this->key,
+			'csrf_token' 	=> $token,
+		));
+	}
 }
