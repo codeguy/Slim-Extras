@@ -33,13 +33,14 @@
  *
  * The View_Mustache is a Custom View class that renders templates using the
  * Mustache template language (http://mustache.github.com/) and the
- * [Mustache.php library](github.com/bobthecow/mustache.php).
+ * [Mustache.php library](github.com/bobthecow/mustache.php). Requires
+ * Mustache 2.x.
  *
  * There is one field that you, the developer, will need to change:
  * - mustacheDirectory
  * Setting the field is not required if an autoloader is in place which finds the
  * Mustache class(es).
- * 
+ *
  * @package Slim
  * @author  Johnson Page <http://johnsonpage.org>
  * @author  Michael Heim <http://www.zeilenwechsel.de>
@@ -53,10 +54,10 @@ class View_Mustache extends Slim_View {
     public $mustacheDirectory = null;
     
     /**
-     * @var Mustache|Mustache_Engine Instance of the template engine
+     * @var Mustache_Engine Instance of the template engine
      */
     protected $mustache = null;
-    
+
     /**
      * Append data to existing View data. Can handle arrays as well as an object (for PHP-5.2-compatible lambda
      * functions in Mustache).
@@ -64,6 +65,7 @@ class View_Mustache extends Slim_View {
      * Note that you can append arrays to an existing object, or an object to an existing array, but NOT an object to
      * an object. Use one object only, at the most.
      *
+     * @throws  InvalidArgumentException
      * @param   array|Object $data
      * @return  void
      */
@@ -90,14 +92,7 @@ class View_Mustache extends Slim_View {
      */
     public function render( $template ) {
         $this->createMustache();
-        if ( $this->getMustacheMajorVersion() == 1 ) {
-            // Mustache 1.x
-            $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
-            $rendered = $this->mustache->render($contents, $this->data);
-        } else {
-            // Mustache 2.x
-            $rendered = $this->mustache->render(ltrim($template, '/'), $this->data);
-        }
+        $rendered = $this->mustache->render(ltrim($template, '/'), $this->data);
         
         return $rendered;
     }
@@ -110,50 +105,17 @@ class View_Mustache extends Slim_View {
         
         if ( !is_null($this->mustacheDirectory) ) {
             
-            if ( file_exists($this->mustacheDirectory . '/Mustache.php') ) {
-                // Mustache 1.x
-                require_once $this->mustacheDirectory . '/Mustache.php';
-            } else {
-                // Mustache 2.x
-                require_once $this->mustacheDirectory . '/Autoloader.php';
-                Mustache_Autoloader::register( dirname($this->mustacheDirectory) );
-            }
+            require_once $this->mustacheDirectory . '/Autoloader.php';
+            Mustache_Autoloader::register( dirname($this->mustacheDirectory) );
             
         }
         
-        if ( class_exists('Mustache') ) {
+        $loader = new Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory());
+        $this->mustache = new Mustache_Engine( array(
+            'loader' => $loader,
+            'partials_loader' => $loader
+        ) );
             
-            // Mustache 1.x
-            $this->mustache = new Mustache();
-            
-            // Add support for the fixed-partials branch of Mustache 1.x
-            if ( method_exists($this->mustache, "_setTemplateBase") ) $this->mustache->_setTemplateBase($this->getTemplatesDirectory());
-            
-        } else {
-            
-            // Mustache 2.x
-            $loader = new Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory());
-            $this->mustache = new Mustache_Engine( array(
-                'loader' => $loader,
-                'partials_loader' => $loader
-            ) );
-            
-        }
-    }
-    
-    /**
-     * @return integer
-     */
-    protected function getMustacheMajorVersion () {
-        if ( $this->mustache instanceof Mustache ) {
-            $version = 1;
-        } elseif( $this->mustache instanceof Mustache_Engine ) {
-            $version = 2;
-        } else {
-            throw new RuntimeException('Unknown version of Mustache');
-        }
-        
-        return $version;
     }
 }
 
