@@ -16,6 +16,6 @@ class Twig_Extensions_Slim extends \Twig_Extension
 
     public function urlFor($name, $params = array(), $appName = 'default')
     {
-        return Slim::getInstance($appName)->urlFor($name, $params);
+        return \Slim\Slim::getInstance($appName)->urlFor($name, $params);
     }
 }
