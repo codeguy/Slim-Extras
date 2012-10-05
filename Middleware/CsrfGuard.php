@@ -4,84 +4,71 @@ namespace Slim\Extras\Middleware;
 class CsrfGuard extends \Slim\Middleware
 {
     /**
-	 * CSRF token key name.
-	 *
-	 * @var string
-	 */
-	protected $key;
+     * CSRF token key name.
+     *
+     * @var string
+     */
+    protected $key;
 
     /**
-	 * CSRF graceful.
-	 *
-	 * @var string
-	 */
-	protected $graceful;	
+     * Constructor.
+     *
+     * @param string    $key        The CSRF token key name.
+     * @return void
+     */
+    public function __construct($key = 'csrf_token')
+    {
+        if (! is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
+            throw new \OutOfBoundsException('Invalid CSRF token key "' . $key . '"');
+        }
 
-	/**
-	 * Constructor.
-	 *
-	 * @param boolean 	$graceful 	If true then destroy the session (graceful), otherwise halt the application (ungraceful).
-	 * @param string 	$key 		The CSRF token key name.
-	 * @return void
-	 */
-	public function __construct($graceful = false, $key = 'csrf_token')
-	{
-		if (! is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
-			throw new \OutOfBoundsException('Invalid CSRF token key "' . $key . '"');
-		}
+        $this->key = $key;
+    }
 
-		$this->key = $key;
-		$this->graceful = (bool) $graceful;
-	}
+    /**
+     * Call middleware.
+     *
+     * @return void
+     */
+    public function call() 
+    {
+        // Attach as hook.
+        $this->app->hook('slim.before', array($this, 'check'));
 
-	/**
-	 * Call middleware.
-	 *
-	 * @return void
-	 */
-	public function call() 
-	{
-		// Attach as hook.
-		$this->app->hook('slim.before', array($this, 'check'));
+        // Call next middleware.
+        $this->next->call();
+    }
 
-		// Call next middleware.
-		$this->next->call();
-	}
+    /**
+     * Check CSRF token is valid.
+     * Note: Also checks POST data to see if a Moneris RVAR CSRF token exists.
+     *
+     * @return void
+     */
+    public function check() {
+        // Check sessions are enabled.
+        if (session_id() === '') {
+            throw new \Exception('Sessions are required to use the CSRF Guard middleware.');
+        }
 
-	/**
-	 * Check CSRF token is valid.
-	 * Note: Also checks POST data to see if a Moneris RVAR CSRF token exists.
-	 *
-	 * @return void
-	 */
-	public function check() {
-		// Check sessions are enabled.
-		if (session_id() === '') {
-			throw new \Exception('Sessions are required to use the CSRF Guard middleware.');
-		}
+        if (! isset($_SESSION[$this->key])) {
+            $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
+        }
 
-		if (! isset($_SESSION[$this->key])) {
-			$_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
-		}
+        $token = $_SESSION[$this->key];
 
-		$token = $_SESSION[$this->key];
-
-		// Validate the CSRF token.
-		if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
+        // Validate the CSRF token.
+        if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
             $userToken = $this->app->request()->post($this->key);
             if ($token !== $userToken) {
-            	if (! $this->graceful) {
-            		$this->app->halt(400, 'Invalid or missing CSRF token.');
-            	} else {
-            		session_destroy();	
-            	}
+                $this->app->halt(400, 'Invalid or missing CSRF token.');
             }
-		}
+        }
 
-		// Assign CSRF token key and value to view.
-		$this->app->view()->appendData(array(
-			'csrf_key' 		=> $this->key,
-			'csrf_token' 	=> $token,
-		));
-	}
+        // Assign CSRF token key and value to view.
+        $this->app->view()->appendData(array(
+            'csrf_key'      => $this->key,
+            'csrf_token'    => $token,
+        ));
+    }
 }
