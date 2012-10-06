@@ -1,6 +1,6 @@
 <?php
 /**
- * Timestamp Log File Writer
+ * DateTime Log File Writer
  *
  * Use this custom log writer to output log messages
  * to a daily, weekly, monthly, or yearly log file. Log
@@ -9,8 +9,8 @@
  *
  * USAGE
  *
- * $app = new Slim(array(
- *     'log.writer' => new TimestampLogFileWriter()
+ * $app = new \Slim\Slim(array(
+ *     'log.writer' => new \Slim\Extras\Log\DateTimeFileWriter()
  * ));
  *
  * SETTINGS
