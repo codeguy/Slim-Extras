@@ -47,6 +47,11 @@ class Twig extends \Slim\View
     public static $twigDirectory = null;
 
     /**
+     * @var array Paths to directories to attempt to load Twig template from
+     */
+    public static $twigTemplateDirs = array();
+
+    /**
      * @var array The options for the Twig environment, see
      * http://www.twig-project.org/book/03-Twig-for-Developers
      */
@@ -61,6 +66,22 @@ class Twig extends \Slim\View
      * @var TwigEnvironment The Twig environment for rendering templates.
      */
     private $twigEnvironment = null;
+
+    /**
+     * Get a list of template directories
+     *
+     * Returns an array of templates defined by self::$twigTemplateDirs, falls
+     * back to Slim\View's built-in getTemplatesDirectory method.
+     *
+     * @return array
+     **/
+    private function getTemplateDirs()
+    {
+        if (empty(self::$twigTemplateDirs)) {
+            return array($this->getTemplatesDirectory());
+        }
+        return self::$twigTemplateDirs;
+    }
 
     /**
      * Render Twig Template
@@ -92,7 +113,7 @@ class Twig extends \Slim\View
             }
 
             \Twig_Autoloader::register();
-            $loader = new \Twig_Loader_Filesystem($this->getTemplatesDirectory());
+            $loader = new \Twig_Loader_Filesystem($this->getTemplateDirs());
             $this->twigEnvironment = new \Twig_Environment(
                 $loader,
                 self::$twigOptions
