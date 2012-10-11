@@ -17,8 +17,37 @@ library. You can use the Twig custom view in your Slim Framework application lik
 If you are not using Composer to autoload project dependencies, you must also set the Twig view's public static
 `$twigDirectory` property; this is the relative or absolute path to the directory that conatins the Twig library.
 
-You may also set the public static `$twigOptions` property; this is an array of settings that customize the Twig
-library behavior.
+### Twig configuration
+
+There are several public static properties you can use to customize the Twig library behavior.
+
+####$twigOptions
+
+An array of options to pass to the underlying Twig environment ([Twig docs](http://twig.sensiolabs.org/doc/api.html#environment-options)):
+
+	\Slim\Extras\Views\Twig::$twigOptions = array(
+		'debug' => true
+	);
+
+
+####$twigExtensions
+
+An array contianing Twig extensions to load ([Twig docs](http://twig.sensiolabs.org/doc/advanced.html)):
+
+	\Slim\Extras\Views\Twig::$twigExtensions = array(
+		new MyCustomExtension(),
+		new ThirdPartyExtension()
+	);
+
+
+####$twigTemplateDirs
+
+An array of paths to directories containing Twig templates ([Twig docs](http://twig.sensiolabs.org/doc/api.html#twig-loader-filesystem)):
+
+	\Slim\Extras\Views\Twig::$twigTemplateDirs = array(
+		realpath(PROJECT_DIR . '/templates'),
+		realpath(PROJECT_DIR . '/some/other/templates')
+	);
 
 ## Mustache
 
