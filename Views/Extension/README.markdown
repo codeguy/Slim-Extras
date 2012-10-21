@@ -11,7 +11,7 @@ To use this in Twig just include the code below at the top of your Slim index.ph
 	    'Twig_Extensions_Slim',
 	);
 
-Inside your Smarty template you would write:
+Inside your Twig template you would write:
 
 	{{ urlFor('hello', {"name": "Josh", "age": "19"}) }}
 
