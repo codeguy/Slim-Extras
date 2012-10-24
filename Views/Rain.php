@@ -93,8 +93,8 @@ class Rain extends \Slim\View
                 throw new \RuntimeException('Cannot set the Rain lib directory : ' . self::$rainDirectory . '. Directory does not exist.');
             }
 			require_once self::$rainDirectory . '/rain.tpl.class.php';
-			raintpl::$tpl_dir = self::$rainTemplatesDirectory;
-			raintpl::$cache_dir = self::$rainCacheDirectory;
+			\raintpl::$tpl_dir = self::$rainTemplatesDirectory;
+			\raintpl::$cache_dir = self::$rainCacheDirectory;
 			self::$rainInstance = new \raintpl();
 		}
 
