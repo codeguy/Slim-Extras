@@ -11,6 +11,9 @@
  *
  * USAGE
  *
+ * use Slim\Slim;
+ * use Slim\Extras\Middleware\StrongAuth;
+ * 
  * $app = new Slim();
  * $app->add(new StrongAuth(array('provider' => 'PDO', 'dsn' => 'sqlite:memory')));
  *
@@ -42,11 +45,6 @@ class StrongAuth extends \Slim\Middleware
     /**
      * @var string
      */
-    protected $realm;
-
-    /**
-     * @var string
-     */
     protected $username;
 
     /**
@@ -59,18 +57,20 @@ class StrongAuth extends \Slim\Middleware
      */
     protected $settings = array(
         'login.url' => '/',
-        'auth_type' => 'http',
+        'auth.type' => 'http',
     );
 
     /**
      * Constructor
      *
      * @param   array  $config   Configuration for Strong and Login Details
+     * @param   \Strong $strong
      * @return  void
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = array(), \Strong $strong = null)
     {
         $this->config = array_merge($this->settings, $config);
+        $this->auth = (!empty($strong)) ? $strong : \Strong::factory($this->config);
     }
 
     /**
@@ -80,18 +80,15 @@ class StrongAuth extends \Slim\Middleware
      */
     public function call()
     {
-        $app = $this->app;
-        $config = $this->config;
         $req = $this->app->request();
 
         // Authentication Initialised
-        $auth = Strong::factory($this->config);
-        switch ($this->config['auth_type']) {
+        switch ($this->config['auth.type']) {
             case 'form':
-                $this->formauth($auth, $req);
+                $this->formauth($this->auth, $req);
                 break;
             default:
-                $this->httpauth($auth, $req);
+                $this->httpauth($this->auth, $req);
                 break;
         }
     }
@@ -99,10 +96,10 @@ class StrongAuth extends \Slim\Middleware
     /**
      * Form based authentication
      *
-     * @param Strong $auth
+     * @param \Strong $auth
      * @param object $req
      */
-    private function formauth(Strong $auth, $req)
+    private function formauth(\Strong $auth, $req)
     {
         $app = $this->app;
         $config = $this->config;
@@ -135,10 +132,10 @@ class StrongAuth extends \Slim\Middleware
      * the request has already authenticated, the next middleware is called. Otherwise,
      * a 401 Authentication Required response is returned to the client.
      *
-     * @param Strong $auth
+     * @param \Strong $auth
      * @param object $req
      */
-    private function httpauth(Strong $auth, $req)
+    private function httpauth(\Strong $auth, $req)
     {
         $res = $this->app->response();
         $authUser = $req->headers('PHP_AUTH_USER');
@@ -148,7 +145,7 @@ class StrongAuth extends \Slim\Middleware
             $this->next->call();
         } else {
             $res->status(401);
-            $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $this->realm));
+            $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $this->config['realm']));
         }
     }
 }
