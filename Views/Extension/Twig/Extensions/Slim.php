@@ -1,5 +1,7 @@
 <?php
 
+use \Slim\Slim; //For namespace in composer install
+
 class Twig_Extensions_Slim extends \Twig_Extension
 {
     public function getName()
