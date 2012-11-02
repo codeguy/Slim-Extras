@@ -1,4 +1,16 @@
 <?php
+/**
+ * CSRF Guard
+ *
+ * Use this middleware with your Slim Framework application
+ * to protect you from CSRF attacks.
+ *
+ * USAGE
+ *
+ * $app = new \Slim\Slim();
+ * $app->add(new \Slim\Extras\Middleware\CsrfGuard());
+ *
+ */
 namespace Slim\Extras\Middleware;
 
 class CsrfGuard extends \Slim\Middleware

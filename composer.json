@@ -2,7 +2,7 @@
     "name": "slim/extras",
     "type": "library",
     "description": "Extras package for the Slim Framework",
-    "keywords": ["templating", "extensions"],
+    "keywords": ["templating", "extensions", "middleware"],
     "homepage": "http://github.com/codeguy/Slim-Extras",
     "license": "MIT",
     "authors": [

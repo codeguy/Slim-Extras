@@ -10,12 +10,9 @@
  * @copyright 2012 Andrew Smith
  *
  * USAGE
- *
- * use Slim\Slim;
- * use Slim\Extras\Middleware\StrongAuth;
  * 
- * $app = new Slim();
- * $app->add(new StrongAuth(array('provider' => 'PDO', 'dsn' => 'sqlite:memory')));
+ * $app = new \Slim\Slim();
+ * $app->add(new \Slim\Extras\Middleware\StrongAuth(array('provider' => 'PDO', 'dsn' => 'sqlite:memory')));
  *
  * MIT LICENSE
  *

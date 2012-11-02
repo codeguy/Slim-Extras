@@ -11,8 +11,8 @@
  *
  * USAGE
  *
- * $app = new Slim();
- * $app->add(new HttpBasicAuth('theUsername', 'thePassword'));
+ * $app = new \Slim\Slim();
+ * $app->add(new \Slim\Extras\Middleware\HttpBasicAuth('theUsername', 'thePassword'));
  *
  * MIT LICENSE
  *
