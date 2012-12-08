@@ -77,7 +77,8 @@ class Haml extends \Slim\View
 		require_once self::$hamlDirectory . '/HamlPHP/HamlPHP.php';
 		require_once self::$hamlDirectory . '/HamlPHP/Storage/FileStorage.php';
 		$parser = new \HamlPHP(new \FileStorage(self::$hamlCacheDirectory));
-
-		return $parser->parseFile(self::$hamlTemplatesDirectory . $template, $this->data);
+		$file = $parser->parseFile(self::$hamlTemplatesDirectory . $template);
+		
+		return $parser->evaluate($file, $this->data);
 	}
 }
