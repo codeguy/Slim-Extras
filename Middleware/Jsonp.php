@@ -2,12 +2,21 @@
 /**
  * JSONP Middleware Class for the Slim Framework
  *
- * Simple class to wrap the response of the application in an JSONP callback function.
- * The class is triggered when a get parameter of callback is found    
- * 
  * @author  Tom van Oorschot <tomvanoorschot@gmail.com>
  * @since  17-12-2012
+ *
+ * Simple class to wrap the response of the application in a JSONP callback function.
+ * The class is triggered when a get parameter of callback is found   
+ *
+ * Usage
+ * ====
+ * 
+ * $app = new \Slim\Slim();
+ * $app->add(new \Slim\Extras\Middleware\JSONPMiddleware());
+ * 
  */
+
+namespace Slim\Extras\Middleware;
 
 class JSONPMiddleware extends \Slim\Middleware
 {
