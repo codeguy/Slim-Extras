@@ -29,6 +29,19 @@ This will provide you with basic user Authentication based on username and passw
 	$app->add(new HttpBasicAuth('theUsername', 'thePassword'));
 
 
+## Newrelic
+
+This will provde basic transaction tracking for newrelic.com users
+
+### How to use
+
+    use \Slim\Slim;
+    use \Slim\Extras\Middleware\Newrelic;
+
+	$app = new Slim();
+	$app->add(new Newrelic());
+
+
 ## Strong
 
 ### How to use
