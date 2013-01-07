@@ -9,12 +9,12 @@ This is used to protect your website from CSRF attacks.
     use \Slim\Slim;
     use \Slim\Extras\Middleware\CsrfGuard;
 
-	$app = new Slim();
-	$app->add(new CsrfGuard());
+    $app = new Slim();
+    $app->add(new CsrfGuard());
 
 In your view template add this to any web forms you have created.
 
-	<input type="hidden" name="<?php echo $csrf_key; ?>" value="<?php echo $csrf_token; ?>">
+    <input type="hidden" name="<?php echo $csrf_key; ?>" value="<?php echo $csrf_token; ?>">
 
 ## HttpBasic
 
@@ -25,8 +25,8 @@ This will provide you with basic user Authentication based on username and passw
     use \Slim\Slim;
     use \Slim\Extras\Middleware\HttpBasicAuth;
 
-	$app = new Slim();
-	$app->add(new HttpBasicAuth('theUsername', 'thePassword'));
+    $app = new Slim();
+    $app->add(new HttpBasicAuth('theUsername', 'thePassword'));
 
 
 ## Strong
@@ -42,17 +42,15 @@ Here is some sample code for using PDO provider and securing some routes using r
     use \Slim\Extras\Middleware\StrongAuth;
 
     $app = new Slim();
-	$config = array(
-	    'provider' => 'PDO',
-	    'dsn' => 'mysql:host=localhost;dbname=slimdev',
-	    'dbuser' => 'serverside',
-	    'dbpass' => 'password',
-	    'auth.type' => 'form',
-	    'login.url' => '/',
-	    'security.urls' => array(
-	        array('path' => '/test'),
-	        array('path' => '/about/.+'),
-	    ),
-	);
+    $config = array(
+        'provider' => 'PDO',
+        'pdo' => new PDO('mysql:host=localhost;dbname=database_name', 'username', 'password'),
+        'auth.type' => 'form',
+        'login.url' => '/',
+        'security.urls' => array(
+            array('path' => '/test'),
+            array('path' => '/about/.+'),
+        ),
+    );
 
-	$app->add(new StrongAuth($config));
+    $app->add(new StrongAuth($config));
