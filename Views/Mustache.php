@@ -63,9 +63,7 @@ class Mustache extends \Slim\View
      */
     public function render($template)
     {
-        $m = $this->getEngine();
-        $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
-        return $m->render($contents, $this->data);
+        return $this->getEngine()->render($template, $this->data);
     }
 
     /**
@@ -82,7 +80,10 @@ class Mustache extends \Slim\View
                 \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
             }
 
-            $this->engine = new \Mustache_Engine();
+            $this->engine = new \Mustache_Engine(array(
+                // Autoload templates (and partials) from the templates directory.
+                'loader' => new \Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory()),
+            ));
         }
 
         return $this->engine;
