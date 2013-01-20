@@ -50,6 +50,11 @@ class Mustache extends \Slim\View
     public static $mustacheDirectory = null;
 
     /**
+     * @var \Mustache_Engine A Mustache engine instance for this view
+     */
+    private $engine;
+
+    /**
      * Renders a template using Mustache.php.
      *
      * @see View::render()
@@ -58,14 +63,28 @@ class Mustache extends \Slim\View
      */
     public function render($template)
     {
-        // Check for Composer autoloading
-        if (!class_exists('\Mustache_Engine')) {
-            require_once self::$mustacheDirectory . '/Autoloader.php';
-            \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
-        }
-
-        $m = new \Mustache_Engine();
+        $m = $this->getEngine();
         $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
         return $m->render($contents, $this->data);
+    }
+
+    /**
+     * Get a \Mustache_Engine instance.
+     *
+     * @return \Mustache_Engine
+     */
+    private function getEngine()
+    {
+        if (!isset($this->engine)) {
+            // Check for Composer autoloading
+            if (!class_exists('\Mustache_Engine')) {
+                require_once self::$mustacheDirectory . '/Autoloader.php';
+                \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
+            }
+
+            $this->engine = new \Mustache_Engine();
+        }
+
+        return $this->engine;
     }
 }
