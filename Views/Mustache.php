@@ -102,6 +102,11 @@ class Mustache extends \Slim\View
                 $options['loader'] = new \Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory());
             }
 
+            // If a partials loader is not specified, fall back to the default template loader.
+            if (!isset($options['partials_loader']) && !isset($options['partials'])) {
+                $options['partials_loader'] = $options['loader'];
+            }
+
             $this->engine = new \Mustache_Engine($options);
         }
 
