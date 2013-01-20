@@ -50,9 +50,24 @@ class Mustache extends \Slim\View
     public static $mustacheDirectory = null;
 
     /**
+     * @var array An array of \Mustache_Engine options
+     */
+    public static $mustacheOptions = array();
+
+    /**
      * @var \Mustache_Engine A Mustache engine instance for this view
      */
-    private $engine;
+    private $engine = null;
+
+    /**
+     * @param array $options \Mustache_Engine configuration options
+     */
+    public function __construct(array $options = null)
+    {
+        if ($options !== null) {
+            self::$mustacheOptions = $options;
+        }
+    }
 
     /**
      * Renders a template using Mustache.php.
@@ -80,10 +95,14 @@ class Mustache extends \Slim\View
                 \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
             }
 
-            $this->engine = new \Mustache_Engine(array(
-                // Autoload templates (and partials) from the templates directory.
-                'loader' => new \Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory()),
-            ));
+            $options = self::$mustacheOptions;
+
+            // Autoload templates from the templates directory.
+            if (!isset($options['loader'])) {
+                $options['loader'] = new \Mustache_Loader_FilesystemLoader($this->getTemplatesDirectory());
+            }
+
+            $this->engine = new \Mustache_Engine($options);
         }
 
         return $this->engine;
