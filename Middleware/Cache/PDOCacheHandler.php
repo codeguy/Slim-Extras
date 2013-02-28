@@ -32,7 +32,7 @@
  */
 namespace Slim\Extras\Middleware\Cache;
 
-class CacheHandler implements ICacheHandler
+class PDOCacheHandler implements ICacheHandler
 {
     protected $db;
     protected $ttl;

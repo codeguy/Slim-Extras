@@ -12,11 +12,11 @@
  *
  * use \Slim\Slim;
  * use \Slim\Extras\Middleware\Cache;
- * use \Slim\Extras\Middleware\Cache\CacheHandler;
+ * use \Slim\Extras\Middleware\Cache\PDOCacheHandler;
  *
  * $db = ...
  * $app = new Slim();
- * $handler = new CacheHandler($db);
+ * $handler = new PDOCacheHandler($db);
  * $app->add(new Cache($handler));
  *
  * MIT LICENSE

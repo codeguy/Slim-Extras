@@ -8,14 +8,14 @@ Provides basic Caching functionality.
 
     use \Slim\Slim;
     use \Slim\Extras\Middleware\Cache;
-    use \Slim\Extras\Middleware\Cache\CacheHandler;
+    use \Slim\Extras\Middleware\Cache\PDOCacheHandler;
 
     $db = ...
     $app = new Slim();
-    $handler = new CacheHandler($db);
+    $handler = new PDOCacheHandler($db);
     $app->add(new Cache($handler));
 
-The example implementation `CacheHandler` uses a PDO connection to a MySQL
+The example implementation `PDOCacheHandler` uses a PDO connection to a MySQL
 database and the table structure included in `Cache/cache.sql`. You can write
 your own handler by implementing the `ICacheHandler` interface.
 
