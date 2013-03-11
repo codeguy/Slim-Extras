@@ -44,14 +44,13 @@ class API extends \Slim\Middleware
     $this->next->call();
     
     // But wait! Let's add support for jsonp callbacks
-    // Stolen from Tom van Oorschot <tomvanoorschot@gmail.com>
     $request = $app->request();
     $callback = $request->params('callback');
   
     if(!empty($callback)){
-      $this->app->contentType('application/javascript');
-      $jsonp_response = htmlspecialchars($callback) . "(" .$this->app->response()->body() . ")";
-      $this->app->response()->body($jsonp_response);
+      $app->contentType('application/javascript');
+      $jsonp_response = $callback . "(" .$app->response()->body() . ")";
+      $app->response()->body($jsonp_response);
     }
   }
 }
