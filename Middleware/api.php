@@ -39,16 +39,15 @@ class API extends \Slim\Middleware
     $app->get('/:method', function($method) use ($app) {
     	$app->halt(400, json_encode(array('error'=>'There is no endpoint named '.$method.'!')));
     })->conditions(array('method' => '.+'));
-
-    // Output jsonp if user sets a callback parameter
-    // Tom van Oorschot <tomvanoorschot@gmail.com>
+    
+    // Move along to next call
+    $this->next->call();
+    
+    // But wait! Let's add support for jsonp callbacks
+    // Stolen from Tom van Oorschot <tomvanoorschot@gmail.com>
     $request = $app->request();
     $callback = $request->params('callback');
-    
-    // Get the next response so we can wrap it
-    $this->next->call();
   
-    // Do the damn thing
     if(!empty($callback)){
       $this->app->contentType('application/javascript');
       $jsonp_response = htmlspecialchars($callback) . "(" .$this->app->response()->body() . ")";
