@@ -9,17 +9,17 @@ This repository contains custom views for your Slim Framework applications. Cust
 use popular third-party templating frameworks, like [Twig](http://twig.sensiolabs.org/) or
 [Smarty](http://www.smarty.net/), with your Slim Framework application.
 
-* Smarty
-* Twig
-* Mustache
-* Haml
-* Haanga
-* Blitz
-* Dwoo
-* Sugar
-* Savant
-* Rain
-* H2o
+* [Smarty](http://www.smarty.net/)
+* [Twig](http://twig.sensiolabs.org/)
+* [Mustache](https://github.com/bobthecow/mustache.php)
+* [Haml](https://code.google.com/p/phamlp/)
+* [Haanga](http://haanga.org/)
+* [Blitz](http://alexeyrybak.com/blitz/blitz_en.html)
+* [Dwoo](http://dwoo.org/)
+* [Sugar](http://php-sugar.net/)
+* [Savant](http://phpsavant.com/)
+* [Rain](http://www.raintpl.com/)
+* [H2o](http://www.h2o-template.org/)
 
 This example demonstrates how to use the custom Twig view in your Slim Framework application:
 
