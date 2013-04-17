@@ -42,12 +42,17 @@ class H2o extends \Slim\View
 	/**
 	 * @var string The path to the h2o.php WITH a trailing slash
 	 */
-	public static $h2o_directory = '';
+	public $parserDirectory = null;
 
 	/**
 	 * @var array H2o options, see H2o documentation for reference
 	 */
-	public static $h2o_options = array();
+	public $parserOptions = array();
+
+	/**
+     * @var parserInstance for rendering templates.
+     */
+	private $parserInstance = null;
 
 	/**
 	 * Renders a template using h2o
@@ -57,30 +62,41 @@ class H2o extends \Slim\View
 	 */
 	public function render($template)
 	{
-		if (!array_key_exists('searchpath', self::$h2o_options)) {
-			self::$h2o_options['searchpath'] = $this->getTemplatesDirectory() . '/';
-		}
-		$this->_load_h2o();
-		$h2o = new \H2o($template, self::$h2o_options);
+		$parser = $this->getInstance($template);
+		return $parser->render($this->all());
+	}
 
-		return $h2o->render($this->data);
+	/**
+     * Creates new H2o object instance if it doesn't already exist, and returns it.
+     *
+     * @return \H2o Instance
+     */
+	public function getInstance($template)
+	{
+		if (! $this->parserInstance) {
+			$this->loadH2o();
+			if (!array_key_exists('searchpath', $this->parserOptions)) {
+				$this->parserOptions['searchpath'] = $this->getTemplatesDirectory() . '/';
+			}
+			$this->parserInstance = new \H2o($template, $this->parserOptions)
+		}
+		return $this->parserInstance;
 	}
 
 	/**
 	 * Loads H2o library if it is not already loaded
 	 *
-	 * @access private
-	 * @throws RuntimeException if h2o directory doesn't exist
+	 * @throws \RuntimeException if h2o directory doesn't exist
 	 * @return void
 	 */
-	private function _load_h2o()
+	private function loadH2o()
 	{
 		if (class_exists('\H2o')) {
 			return;
 		}
-		if (!is_dir(self::$h2o_directory)) {
+		if (!is_dir($this->parserDirectory)) {
 			throw new \RuntimeException('h2o directory is invalid');
 		}
-		require_once self::$h2o_directory . 'h2o.php';
+		require_once $this->parserDirectory . 'h2o.php';
 	}
 }

@@ -37,9 +37,8 @@ namespace Slim\Extras\Views;
  * HamlPHP (https://github.com/sniemela/HamlPHP).
  *
  * There are three field that you, the developer, will need to change:
- * - hamlDirectory
- * - hamlTemplatesDirectory
- * - hamlCacheDirectory
+ * - parserDirectory
+ * - parserCacheDirectory
  *
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
@@ -49,17 +48,17 @@ class Haml extends \Slim\View
 	/**
 	 * @var string The path to the directory containing the "HamlPHP" folder without trailing slash.
 	 */
-	public static $hamlDirectory = null;
+	public $parserDirectory = null;
 
 	/**
 	 * @var string The path to the templates folder WITH the trailing slash
 	 */
-	public static $hamlTemplatesDirectory = 'templates/';
+	public $parserCacheDirectory = null;
 
 	/**
-	 * @var string The path to the templates folder WITH the trailing slash
-	 */
-	public static $hamlCacheDirectory = null;
+     * @var parserInstance for rendering templates.
+     */
+	private $parserInstance = null;
 
 	/**
 	 * Renders a template using Haml.php.
@@ -71,14 +70,28 @@ class Haml extends \Slim\View
 	 */
 	public function render($template)
 	{
-        if (!is_dir(self::$hamlDirectory)) {
-            throw new \RuntimeException('Cannot set the HamlPHP lib directory : ' . self::$hamlDirectory . '. Directory does not exist.');
-        }
-		require_once self::$hamlDirectory . '/HamlPHP/HamlPHP.php';
-		require_once self::$hamlDirectory . '/HamlPHP/Storage/FileStorage.php';
-		$parser = new \HamlPHP(new \FileStorage(self::$hamlCacheDirectory));
+        $parser = $this->getInstance();
+		$file = $parser->parseFile($this->getTemplatesDirectory() . $template);
+		return $parser->evaluate($file, $this->all());
+	}
 
-		$file = $parser->parseFile(self::$hamlTemplatesDirectory . $template);
-		return $parser->evaluate($file, $this->data);
+	/**
+	 * Creates new Rain instance if it doesn't already exist, and returns it.
+	 *
+     * @throws \RuntimeException If Rain lib directory does not exist.
+	 * @return \HamlPHP Instance
+	 */
+	public function getInstance()
+	{
+		if (! $this->parserInstance) {
+            if (!is_dir($this->parserDirectory)) {
+	            throw new \RuntimeException('Cannot set the HamlPHP lib directory : ' . $this->parserDirectory . '. Directory does not exist.');
+	        }
+			require_once $this->parserDirectory . '/HamlPHP/HamlPHP.php';
+			require_once $this->parserDirectory . '/HamlPHP/Storage/FileStorage.php';
+			$this->parserInstnce = new \HamlPHP(new \FileStorage($this->parserCacheDirectory));
+		}
+
+		return $this->parserInstance;
 	}
 }

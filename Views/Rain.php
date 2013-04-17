@@ -36,9 +36,8 @@ namespace Slim\Extras\Views;
  * Rain template language (http://www.raintpl.com/).
  *
  * There are three fields that you, the developer, will need to change:
- * - rainDirectory
- * - rainTemplatesDirectory
- * - rainCacheDirectory
+ * - parserDirectory
+ * - parserCacheDirectory
  *
  * @package Slim
  * @author  Matthew Callis <http://superfamicom.org/>
@@ -48,22 +47,17 @@ class Rain extends \Slim\View
 	/**
 	 * @var string The path to the directory containing "rain.tpl.class.php" without trailing slash.
 	 */
-	public static $rainDirectory = null;
-
-	/**
-	 * @var persistent instance of the Smarty object
-	 */
-	private static $rainInstance = null;
-
-	/**
-	 * @var string The path to the templates folder WITH the trailing slash
-	 */
-	public static $rainTemplatesDirectory = 'templates/';
+	public $parserDirectory = null;
 
 	/**
 	 * @var string The path to the cache folder WITH the trailing slash
 	 */
-	public static $rainCacheDirectory = null;
+	public $parserCacheDirectory = null;
+
+	/**
+     * @var parserInstance for rendering templates.
+     */
+	private $parserInstance = null;
 
 	/**
 	 * Renders a template using Rain.php.
@@ -74,10 +68,10 @@ class Rain extends \Slim\View
 	 */
 	public function render($template)
 	{
-		$rain = $this->getInstance();
-		$rain->assign($this->data);
+		$parser = $this->getInstance();
+		$parser->assign($this->all());
 
-		return $rain->draw($template, $return_string = true);
+		return $parser->draw($template, $return_string = true);
 	}
 
 	/**
@@ -86,18 +80,18 @@ class Rain extends \Slim\View
      * @throws RuntimeException If Rain lib directory does not exist.
 	 * @return RainInstance
 	 */
-	private function getInstance()
+	public function getInstance()
 	{
-		if (!self::$rainInstance) {
-            if (!is_dir(self::$rainDirectory)) {
-                throw new \RuntimeException('Cannot set the Rain lib directory : ' . self::$rainDirectory . '. Directory does not exist.');
+		if (! $this->parserInstance) {
+            if (!is_dir($this->parserDirectory)) {
+                throw new \RuntimeException('Cannot set the Rain lib directory : ' . $this->parserDirectory . '. Directory does not exist.');
             }
-			require_once self::$rainDirectory . '/rain.tpl.class.php';
-			\raintpl::$tpl_dir = self::$rainTemplatesDirectory;
-			\raintpl::$cache_dir = self::$rainCacheDirectory;
-			self::$rainInstance = new \raintpl();
+			require_once $this->parserDirectory . '/rain.tpl.class.php';
+			\raintpl::$tpl_dir = $this->getTemplatesDirectory();
+			\raintpl::$cache_dir = $this->parserCacheDirectory;
+			$this->parserInstance = new \raintpl();
 		}
 
-		return self::$rainInstance;
+		return $this->parserInstance;
 	}
 }

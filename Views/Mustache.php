@@ -37,7 +37,7 @@ namespace Slim\Extras\Views;
  * [Mustache.php library](github.com/bobthecow/mustache.php).
  *
  * There is one field that you, the developer, will need to change:
- * - mustacheDirectory
+ * - parserDirectory
  *
  * @package Slim
  * @author  Johnson Page <http://johnsonpage.org>
@@ -47,17 +47,17 @@ class Mustache extends \Slim\View
     /**
      * @var string The path to the directory containing Mustache.php
      */
-    public static $mustacheDirectory = null;
+    public $parserDirectory = null;
 
     /**
      * @var array An array of \Mustache_Engine options
      */
-    public static $mustacheOptions = array();
+    public $parserOptions = array();
 
     /**
      * @var \Mustache_Engine A Mustache engine instance for this view
      */
-    private $engine = null;
+    private $parserInstance = null;
 
     /**
      * @param array $options \Mustache_Engine configuration options
@@ -65,7 +65,7 @@ class Mustache extends \Slim\View
     public function __construct(array $options = null)
     {
         if ($options !== null) {
-            self::$mustacheOptions = $options;
+            $this->parserOptions = $options;
         }
     }
 
@@ -78,7 +78,7 @@ class Mustache extends \Slim\View
      */
     public function render($template)
     {
-        return $this->getEngine()->render($template, $this->data);
+        return $this->getInstance()->render($template, $this->all());
     }
 
     /**
@@ -86,16 +86,16 @@ class Mustache extends \Slim\View
      *
      * @return \Mustache_Engine
      */
-    private function getEngine()
+    public function getInstance()
     {
-        if (!isset($this->engine)) {
+        if (!isset($this->parserInstance)) {
             // Check for Composer autoloading
             if (!class_exists('\Mustache_Engine')) {
-                require_once self::$mustacheDirectory . '/Autoloader.php';
-                \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
+                require_once $this->parserDirectory . '/Autoloader.php';
+                \Mustache_Autoloader::register(dirname($this->parserDirectory));
             }
 
-            $options = self::$mustacheOptions;
+            $options = $this->parserOptions;
 
             // Autoload templates from the templates directory.
             if (!isset($options['loader'])) {
@@ -107,9 +107,9 @@ class Mustache extends \Slim\View
                 $options['partials_loader'] = $options['loader'];
             }
 
-            $this->engine = new \Mustache_Engine($options);
+            $this->parserInstance = new \Mustache_Engine($options);
         }
 
-        return $this->engine;
+        return $this->parserInstance;
     }
 }

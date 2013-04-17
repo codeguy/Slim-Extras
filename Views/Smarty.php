@@ -36,10 +36,9 @@ namespace Slim\Extras\Views;
  * template language (http://www.smarty.net).
  *
  * Two fields that you, the developer, will need to change are:
- * - smartyDirectory
- * - smartyTemplatesDirectory
- * - smartyCompileDirectory
- * - smartyCacheDirectory
+ * - parserDirectory
+ * - parserCompileDirectory
+ * - parserCacheDirectory
  *
  * @package Slim
  * @author  Jose da Silva <http://josedasilva.net>
@@ -49,76 +48,70 @@ class Smarty extends \Slim\View
     /**
      * @var string The path to the Smarty code directory WITHOUT the trailing slash
      */
-    public static $smartyDirectory = null;
+    public $parserDirectory = null;
 
     /**
      * @var string The path to the Smarty compiled templates folder WITHOUT the trailing slash
      */
-    public static $smartyCompileDirectory = null;
+    public $parserCompileDirectory = null;
 
     /**
      * @var string The path to the Smarty cache folder WITHOUT the trailing slash
      */
-    public static $smartyCacheDirectory = null;
-
-    /**
-     * @var string The path to the templates folder WITHOUT the trailing slash
-     */
-    public static $smartyTemplatesDirectory = 'templates';
+    public $parserCacheDirectory = null;
 
     /**
      * @var SmartyExtensions The Smarty extensions directory you want to load plugins from
      */
-    public static $smartyExtensions = array();
+    public $parserExtensions = array();
 
     /**
-     * @var persistent instance of the Smarty object
+     * @var parserInstance persistent instance of the Parser object.
      */
-    private static $smartyInstance = null;
+    private $parserInstance = null;
 
     /**
-    * Render Smarty Template
-    *
-    * This method will output the rendered template content
-    *
-    * @param    string $template The path to the Smarty template, relative to the  templates directory.
-    * @return   void
-    */
-
+     * Render Template
+     *
+     * This method will output the rendered template content
+     *
+     * @param    string $template The path to the template, relative to the  templates directory.
+     * @return   void
+     */
     public function render($template)
     {
-        $instance = self::getInstance();
-        $instance->assign($this->data);
+        $parser = $this->getInstance();
+        $parser->assign($this->all());
 
-        return $instance->fetch($template);
+        return $parser->fetch($template);
     }
 
     /**
      * Creates new Smarty object instance if it doesn't already exist, and returns it.
      *
-     * @throws RuntimeException If Smarty lib directory does not exist
-     * @return Smarty Instance
+     * @throws \RuntimeException If Smarty lib directory does not exist
+     * @return \Smarty Instance
      */
-    public static function getInstance()
+    public function getInstance()
     {
-        if (!(self::$smartyInstance instanceof \Smarty)) {
-            if (!is_dir(self::$smartyDirectory)) {
-                throw new \RuntimeException('Cannot set the Smarty lib directory : ' . self::$smartyDirectory . '. Directory does not exist.');
+        if (! ($this->parserInstance instanceof \Smarty)) {
+            if (!is_dir($this->parserDirectory)) {
+                throw new \RuntimeException('Cannot set the Smarty lib directory : ' . $this->parserDirectory . '. Directory does not exist.');
             }
-            require_once self::$smartyDirectory . '/Smarty.class.php';
-            self::$smartyInstance = new \Smarty();
-            self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
-            if (self::$smartyExtensions) {
-                self::$smartyInstance->addPluginsDir(self::$smartyExtensions);
+            require_once $this->parserDirectory . '/Smarty.class.php';
+            $this->parserInstance = new \Smarty();
+            $this->parserInstance->template_dir = $this->getTemplatesDirectory();
+            if ($this->parserExtensions) {
+                $this->parserInstance->addPluginsDir($this->parserExtensions);
             }
-            if (self::$smartyCompileDirectory) {
-                self::$smartyInstance->compile_dir  = self::$smartyCompileDirectory;
+            if ($this->parserCompileDirectory) {
+                $this->parserInstance->compile_dir  = $this->parserCompileDirectory;
             }
-            if (self::$smartyCacheDirectory) {
-                self::$smartyInstance->cache_dir  = self::$smartyCacheDirectory;
+            if ($this->parserCacheDirectory) {
+                $this->parserInstance->cache_dir  = $this->parserCacheDirectory;
             }
         }
 
-        return self::$smartyInstance;
+        return $this->parserInstance;
     }
 }

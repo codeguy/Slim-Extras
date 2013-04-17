@@ -60,7 +60,7 @@ class Haanga extends \Slim\View
     {
         require_once $haangaDir . '/lib/Haanga.php';
         \Haanga::configure(array(
-            'template_dir' => $templatesDir,
+            'template_dir' => $this->getTemplatesDirectory(),
             'cache_dir' => $compiledDir
         ));
     }
@@ -75,6 +75,6 @@ class Haanga extends \Slim\View
      */
     public function render($template)
     {
-        return \Haanga::load($template, $this->data);
+        return \Haanga::load($template, $this->all());
     }
 }

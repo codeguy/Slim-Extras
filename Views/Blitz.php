@@ -55,22 +55,44 @@ class xBlitz extends \Blitz
 
 class Blitz extends \Slim\View
 {
-    private $blitzEnvironment = null;
+    private $parserInstance = null;
 
+    /**
+     * Render Template
+     *
+     * This method will output the rendered template content
+     *
+     * @param    string $template The path to the template, relative to the  templates directory.
+     * @return   void
+     */
     public function render($template)
     {
-        $env = $this->getEnvironment($template);
-
-        return $env->parse($this->getData());
+        $parser = $this->getInstance($template);
+        return $parser->parse($this->all());
     }
 
-    private function getEnvironment($template)
+    /**
+     * Creates new Blitz object instance if it doesn't already exist, and returns it.
+     *
+     * @return \Blitz Instance
+     */
+    public function getInstance($template)
     {
-        if (!$this->blitzEnvironment) {
+        if (!$this->parserInstance) {
             ini_set('blitz.path', $this->getTemplatesDirectory() . '/');
-            $this->blitzEnvironment = new xBlitz($template);
+            $this->parserInstance = new xBlitz($template);
         }
 
-        return $this->blitzEnvironment;
+        return $this->parserInstance;
+    }
+
+    /**
+     * DEPRECATION WARNING! This method will be removed in the next major point release
+     *
+     * Use getInstance method instead
+     */
+    private function getEnvironment($template)
+    {
+        return $this->getInstance($template);
     }
 }
