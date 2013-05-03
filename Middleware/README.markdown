@@ -89,8 +89,8 @@ cache. Inspired by [less.js-middleware](https://github.com/emberfeather/less.js-
   `/path/to/public/css/style.less`. __REQUIRED__.
 * `cache` - Cache CSS file to filesystem. Default is `true`.
 * `cache.dir` - Directory for the cached CSS file. Default is `src`.
-* `minify` - Minify the CSS output.
-* `debug` - Send debug messages to Slim Logger.
+* `minify` - Minify the CSS output. Default is `true`.
+* `debug` - Send debug messages to Slim Logger. Default is `false`.
 
 Example:
 
