@@ -162,10 +162,9 @@ class Less extends Middleware
                 }
 
                 // Render results and exit
-                header('Content-Type: text/css');
-                echo $css->dump();
-                ob_end_flush();
-                exit;
+                $res = $app->response();
+                $res['Content-Type'] = 'text/css';
+                $app->halt(200, echo $css->dump());
             }
         });
 
