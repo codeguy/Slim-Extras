@@ -30,7 +30,7 @@ An array of options to pass to the underlying Twig environment ([Twig docs](http
 	);
 
 
-####$twigExtensions
+#### Twig Extensions
 
 An array contianing Twig extensions to load ([Twig docs](http://twig.sensiolabs.org/doc/advanced.html)):
 
@@ -40,14 +40,14 @@ An array contianing Twig extensions to load ([Twig docs](http://twig.sensiolabs.
 	);
 
 
-####$twigTemplateDirs
+#### Twig Template Directory
 
 An array of paths to directories containing Twig templates ([Twig docs](http://twig.sensiolabs.org/doc/api.html#twig-loader-filesystem)):
 
-	\Slim\Extras\Views\Twig::$twigTemplateDirs = array(
+	$app->view()->setTemplatesDirectory(array(
 		realpath(PROJECT_DIR . '/templates'),
 		realpath(PROJECT_DIR . '/some/other/templates')
-	);
+	));
 
 ## Mustache
 
@@ -90,20 +90,6 @@ as C and is compiled to a PHP extension. This means it is FAST. You can learn mo
 		'view' => new \Slim\Extras\Views\Blitz()
 	));
 
-## HaangaView
-
-The `\Slim\Extras\Views\Haanga` custom view class provides support for the Haanga templating system. Refer to
-the `Views/Haanga.php` file for further documentation.
-
-    <?php
-	$app = new \Slim\Slim(array(
-        'view' => new \Slim\Extras\Views\Haanga(
-        	'/path/to/Haanga/dir',
-        	'/path/to/templates/dir',
-        	'/path/to/compiled/dir'
-        )
-    ));
-
 ## H2o
 
 The `H2o` custom view class provides support for the [H2o templating system](http://www.h2o-template.org). You can
@@ -113,7 +99,7 @@ use the H2o custom view in your Slim Framework application like this:
 	$app = new \Slim\Slim(array(
 		'view' => new \Slim\Extras\Views\H2oView()
 	));
-	
+
 	$app->view()->parserDirectory = './h2o/';
 
 Refer to the `Views/H2o.php` file for further documentation.

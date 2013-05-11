@@ -11,12 +11,12 @@ use popular third-party templating frameworks, like [Twig](http://twig.sensiolab
 
 * Blitz
 * H2o
-* Haanga
 * Haml
 * Mustache
 * Rain
 * Smarty
 * Twig
+* _Haanga_ - deprecated
 * _Dwoo_ - deprecated
 * _Sugar_ - deprecated
 * _Savant_ - deprecated

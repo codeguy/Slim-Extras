@@ -73,10 +73,13 @@ class Twig extends \Slim\View
 
     /**
      * Get templates base directory
-     * @return string
+     * @return array
      */
     public function getTemplatesDirectory()
     {
+        if (is_array($this->templatesDirectory)) {
+            return $this->templatesDirectory;
+        }
         return array($this->templatesDirectory);
     }
 
