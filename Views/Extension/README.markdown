@@ -7,8 +7,8 @@ the Extension directory under the template parser directory of choice.
 ### How to use
 To use this in Twig just include the code below at the top of your Slim index.php file after including TwigView.
 
-	TwigView::$twigExtensions = array(
-	    'Twig_Extensions_Slim',
+	$app->view()->parserExtensions = array(
+		'Twig_Extensions_Slim',
 	);
 
 Inside your Twig template you would write:
@@ -31,7 +31,7 @@ this might seem like a overkill to add Slim's urlFor but it makes organising you
 ### How to use
 To use this in Smarty just include the code below at the top of your Slim index.php after including SmartyView.
 
-	SmartyView::$smartyExtensions = array(
+	$app->view()->parserExtensions = array(
 		dirname(__FILE__) . '/Views/Extension/Smarty',
 	);
 

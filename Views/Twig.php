@@ -47,13 +47,6 @@ class Twig extends \Slim\View
     public $parserDirectory = null;
 
     /**
-     * DEPRECATION WARNING! This method will be removed in the next major point release
-     *
-     * @var array Paths to directories to attempt to load Twig template from
-     */
-    public $twigTemplateDirs = array();
-
-    /**
      * @var array The options for the Twig environment, see
      * http://www.twig-project.org/book/03-Twig-for-Developers
      */
@@ -68,6 +61,24 @@ class Twig extends \Slim\View
      * @var TwigEnvironment The Twig environment for rendering templates.
      */
     private $parserInstance = null;
+
+    /**
+     * Set the base directory that contains view templates
+     * @param   string $directory
+     */
+    public function setTemplatesDirectory($directory)
+    {
+        $this->templatesDirectory = $directory;
+    }
+
+    /**
+     * Get templates base directory
+     * @return string
+     */
+    public function getTemplatesDirectory()
+    {
+        return array($this->templatesDirectory);
+    }
 
     /**
      * Render Twig Template
@@ -109,7 +120,7 @@ class Twig extends \Slim\View
             }
 
             \Twig_Autoloader::register();
-            $loader = new \Twig_Loader_Filesystem($this->getTemplateDirs());
+            $loader = new \Twig_Loader_Filesystem($this->getTemplatesDirectory());
             $this->parserInstance = new \Twig_Environment(
                 $loader,
                 $this->parserOptions
@@ -132,23 +143,5 @@ class Twig extends \Slim\View
         }
 
         return $this->parserInstance;
-    }
-
-    /**
-     * DEPRECATION WARNING! This method will be removed in the next major point release
-     *
-     * Get a list of template directories
-     *
-     * Returns an array of templates defined by self::$twigTemplateDirs, falls
-     * back to Slim\View's built-in getTemplatesDirectory method.
-     *
-     * @return array
-     **/
-    private function getTemplateDirs()
-    {
-        if (empty($this->twigTemplateDirs)) {
-            return array($this->getTemplatesDirectory());
-        }
-        return $this->twigTemplateDirs;
     }
 }

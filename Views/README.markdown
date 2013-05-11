@@ -25,7 +25,7 @@ There are several public static properties you can use to customize the Twig lib
 
 An array of options to pass to the underlying Twig environment ([Twig docs](http://twig.sensiolabs.org/doc/api.html#environment-options)):
 
-	\Slim\Extras\Views\Twig::$twigOptions = array(
+	$app->view()->parserOptions = array(
 		'debug' => true
 	);
 
@@ -34,7 +34,7 @@ An array of options to pass to the underlying Twig environment ([Twig docs](http
 
 An array contianing Twig extensions to load ([Twig docs](http://twig.sensiolabs.org/doc/advanced.html)):
 
-	\Slim\Extras\Views\Twig::$twigExtensions = array(
+	$app->view()->parserExtensions = array(
 		new MyCustomExtension(),
 		new ThirdPartyExtension()
 	);
@@ -56,10 +56,11 @@ The `\Slim\Extras\Views\Mustache` custom view class provides support for the
 You can use the Mustache custom view in your Slim Framework application like this:
 
 	<?php
-	\Slim\Extras\Views\Mustache::$mustacheDirectory = 'path/to/mustacheDirectory/';
 	$app = new \Slim\Slim(array(
 		'view' => new \Slim\Extras\Views\Mustache()
 	));
+
+	$app->view()->parserDirectory = 'path/to/mustacheDirectory/';
 
 Before you can use the Mustache view class, you must set its static public `$mustacheDirectory` property; this is the
 relative or absolute path to the Mustache library.
@@ -109,10 +110,11 @@ The `H2o` custom view class provides support for the [H2o templating system](htt
 use the H2o custom view in your Slim Framework application like this:
 
     <?php
-	\Slim\Extras\Views\H2o::$h2o_directory = './h2o/';
 	$app = new \Slim\Slim(array(
 		'view' => new \Slim\Extras\Views\H2oView()
 	));
+	
+	$app->view()->parserDirectory = './h2o/';
 
 Refer to the `Views/H2o.php` file for further documentation.
 
