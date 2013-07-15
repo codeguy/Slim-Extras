@@ -107,7 +107,9 @@ class Smarty extends \Slim\View
             }
             require_once self::$smartyDirectory . '/Smarty.class.php';
             self::$smartyInstance = new \Smarty();
-            self::$smartyInstance->template_dir = is_null(self::$smartyTemplatesDirectory) ? $this->getTemplatesDirectory() : self::$smartyTemplatesDirectory;
+            if (self::$smartyTemplatesDirectory) {
+                self::$smartyInstance->template_dir = self::$smartyTemplatesDirectory;
+            }
             if (self::$smartyExtensions) {
                 self::$smartyInstance->addPluginsDir(self::$smartyExtensions);
             }
