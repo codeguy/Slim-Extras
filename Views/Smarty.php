@@ -88,7 +88,7 @@ class Smarty extends \Slim\View
     public function render($template)
     {
         $instance = self::getInstance();
-        $instance->assign($this->data);
+        $instance->assign($this->data->all());
 
         return $instance->fetch($template);
     }
