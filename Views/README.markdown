@@ -52,7 +52,7 @@ An array of paths to directories containing Twig templates ([Twig docs](http://t
 ## Mustache
 
 The `\Slim\Extras\Views\Mustache` custom view class provides support for the
-[Mustache template language](http://mustache.github.com/) and the [Mustache.php library](github.com/bobthecow/mustache.php).
+[Mustache template language](http://mustache.github.com/) and the [Mustache.php library](https://github.com/bobthecow/mustache.php).
 You can use the Mustache custom view in your Slim Framework application like this:
 
 	<?php
