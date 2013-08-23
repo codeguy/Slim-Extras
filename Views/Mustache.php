@@ -62,6 +62,6 @@ class Mustache extends \Slim\View
         \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
         $m = new \Mustache_Engine();
         $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
-        return $m->render($contents, $this->data);
+        return $m->render($contents, $this->data->all());
     }
 }
