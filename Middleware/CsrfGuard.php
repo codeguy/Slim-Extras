@@ -84,14 +84,6 @@ class CsrfGuard extends \Slim\Middleware
             throw new \Exception('Sessions are required to use the CSRF Guard middleware.');
         }
 
-        if (! isset($_SESSION[$this->key])) {
-            if (!is_null($this->secret)) {
-                $_SESSION[$this->key] = sha1(md5($this->secret) . rand(0, 0xffffffff));
-            } else {
-                $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
-            }
-        }
-
         $token = $_SESSION[$this->key];
 
         // Validate the CSRF token.
@@ -103,6 +95,14 @@ class CsrfGuard extends \Slim\Middleware
             }
             // Remove token when used
             unset($_SESSION[$this->key]);
+        }
+
+        if (! isset($_SESSION[$this->key])) {
+            if (!is_null($this->secret)) {
+                $_SESSION[$this->key] = sha1(md5($this->secret) . rand(0, 0xffffffff));
+            } else {
+                $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
+            }
         }
 
         // Assign CSRF token key and value to view.
