@@ -84,7 +84,7 @@ class CsrfGuard extends \Slim\Middleware
             throw new \Exception('Sessions are required to use the CSRF Guard middleware.');
         }
 
-        $token = $_SESSION[$this->key];
+        $token = isset($_SESSION[$this->key]) ? $_SESSION[$this->key] : null;
 
         // Validate the CSRF token.
         if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
