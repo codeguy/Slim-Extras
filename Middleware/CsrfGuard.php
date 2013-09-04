@@ -101,6 +101,8 @@ class CsrfGuard extends \Slim\Middleware
             if ($token !== $userToken) {
                 $this->app->halt(400, 'Invalid or missing CSRF token.');
             }
+            // Remove token when used
+            unset($_SESSION[$this->key]);
         }
 
         // Assign CSRF token key and value to view.
