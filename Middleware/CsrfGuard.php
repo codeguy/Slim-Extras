@@ -30,13 +30,21 @@ class CsrfGuard extends \Slim\Middleware
     protected $header;
 
     /**
+     * CSRF secret to create tokens from
+     *
+     * @var string
+     */
+    protected $secret;
+
+    /**
      * Constructor.
      *
      * @param string    $key        The CSRF token key name.
      * @param string    $header     The CSRF token header name.
+     * @param string    $secret     The secret the CSRF token is based on
      * @return void
      */
-    public function __construct($key = 'csrf_token', $header = 'X-CSRFToken')
+    public function __construct($key = 'csrf_token', $header = 'X-CSRFToken', $secret = null)
     {
         if (! is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
             throw new \OutOfBoundsException('Invalid CSRF token key "' . $key . '"');
@@ -47,6 +55,7 @@ class CsrfGuard extends \Slim\Middleware
 
         $this->key    = $key;
         $this->header = $header;
+        $this->secret = $secret;
     }
 
     /**
