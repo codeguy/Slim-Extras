@@ -30,13 +30,21 @@ class CsrfGuard extends \Slim\Middleware
     protected $header;
 
     /**
+     * CSRF secret to create tokens from
+     *
+     * @var string
+     */
+    protected $secret;
+
+    /**
      * Constructor.
      *
      * @param string    $key        The CSRF token key name.
      * @param string    $header     The CSRF token header name.
+     * @param string    $secret     The secret the CSRF token is based on
      * @return void
      */
-    public function __construct($key = 'csrf_token', $header = 'X-CSRFToken')
+    public function __construct($key = 'csrf_token', $header = 'X-CSRFToken', $secret = null)
     {
         if (! is_string($key) || empty($key) || preg_match('/[^a-zA-Z0-9\-\_]/', $key)) {
             throw new \OutOfBoundsException('Invalid CSRF token key "' . $key . '"');
@@ -47,6 +55,7 @@ class CsrfGuard extends \Slim\Middleware
 
         $this->key    = $key;
         $this->header = $header;
+        $this->secret = $secret;
     }
 
     /**
@@ -75,11 +84,7 @@ class CsrfGuard extends \Slim\Middleware
             throw new \Exception('Sessions are required to use the CSRF Guard middleware.');
         }
 
-        if (! isset($_SESSION[$this->key])) {
-            $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
-        }
-
-        $token = $_SESSION[$this->key];
+        $token = isset($_SESSION[$this->key]) ? $_SESSION[$this->key] : null;
 
         // Validate the CSRF token.
         if (in_array($this->app->request()->getMethod(), array('POST', 'PUT', 'DELETE'))) {
@@ -87,6 +92,16 @@ class CsrfGuard extends \Slim\Middleware
             $userToken = $this->app->request()->post($this->key) ?: $this->app->environment()[$normalized_header];
             if ($token !== $userToken) {
                 $this->app->halt(400, 'Invalid or missing CSRF token.');
+            }
+            // Remove token when used
+            unset($_SESSION[$this->key]);
+        }
+
+        if (! isset($_SESSION[$this->key])) {
+            if (!is_null($this->secret)) {
+                $_SESSION[$this->key] = sha1(md5($this->secret) . rand(0, 0xffffffff));
+            } else {
+                $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
             }
         }
 
