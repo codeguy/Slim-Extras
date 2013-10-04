@@ -18,6 +18,9 @@
     ],
     "require": {
         "slim/slim": ">=2.0.0",
+        "kriswallsmith/assetic": "1.0.*",
+        "leafo/lessphp": "0.3.*",
+        "natxet/CssMin": "dev-master#9801e2a0de7ae252ca4f2b85542d75a82047a8b4",
         "php": ">=5.3.0"
     },
     "autoload": {

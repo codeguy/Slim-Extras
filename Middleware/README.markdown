@@ -73,3 +73,36 @@ Here is some sample code for using PDO provider and securing some routes using r
     );
 
     $app->add(new StrongAuth($config));
+
+## LESS
+
+This middleware will intercept requests for CSS files and attempt to find a
+corresponding [LESS CSS](http://lesscss.org) file. If one is found, it will
+compile the file to CSS and serve it, optionally saving the CSS to a filesystem
+cache. Inspired by [less.js-middleware](https://github.com/emberfeather/less.js-middleware).
+
+### How to use
+
+* `src` - Directory to look for LESS files. Example: if `src` is set to
+  `/path/to/public`, and a request for `http://mysite.com/css/style.css` is
+  received, then it will look for a LESS file in
+  `/path/to/public/css/style.less`. __REQUIRED__.
+* `cache` - Cache CSS file to filesystem. Default is `true`.
+* `cache.dir` - Directory for the cached CSS file. Default is `src`.
+* `minify` - Minify the CSS output. Default is `true`.
+* `debug` - Send debug messages to Slim Logger. Default is `false`.
+
+Example:
+
+    use \Slim\Slim;
+    use \Slim\Extras\Middleware\Less;
+
+    $app = new Slim();
+    $app->add(new Less(array(
+        'src' => '/path/to/public',
+        'cache' => true,
+        'cache.dir' => '/path/to/cache',
+        'minify' => true,
+        'debug' => false
+    ));
+
