@@ -102,6 +102,7 @@ class StrongAuth extends \Slim\Middleware
 
                 if (preg_match($patternAsRegex, $req->getPathInfo())) {
                     if (!$auth->loggedIn()) {
+                        $_SESSION['login.redirect'] = $req->getPath();
                         if ($req->getPath() !== $config['login.url']) {
                             $app->redirect($config['login.url']);
                         }
