@@ -69,7 +69,7 @@ class Savant extends \Slim\View
 	public function render($template)
 	{
 		$savant = $this->getInstance();
-		$savant->assign($this->data);
+		$savant->assign($this->data->all());
 
 		return $savant->fetch($template);
 	}
