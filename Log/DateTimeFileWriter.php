@@ -110,14 +110,23 @@ class DateTimeFileWriter
         //Determine label
         $label = 'DEBUG';
         switch ($level) {
-            case \Slim\Log::FATAL:
-                $label = 'FATAL';
+            case \Slim\Log::EMERGENCY:
+                $label = 'EMERGENCY';
+                break;
+            case \Slim\Log::ALERT:
+                $label = 'ALERT';
+                break;
+            case \Slim\Log::CRITICAL:
+                $label = 'CRITICAL';
                 break;
             case \Slim\Log::ERROR:
                 $label = 'ERROR';
                 break;
             case \Slim\Log::WARN:
                 $label = 'WARN';
+                break;
+            case \Slim\Log::NOTICE:
+                $label = 'NOTICE';
                 break;
             case \Slim\Log::INFO:
                 $label = 'INFO';
