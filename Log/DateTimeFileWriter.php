@@ -76,9 +76,24 @@ class DateTimeFileWriter
      *
      * message_format:
      * (string) The log message format; available tokens are...
-     *     %label%      Replaced with the log message level (e.g. FATAL, ERROR, WARN).
-     *     %date%       Replaced with a date string for current timezone (default is ISO8601).
-     *     %message%    Replaced with the log message, coerced to a string.
+     *     %label%           Replaced with the log message level (e.g. FATAL, ERROR, WARN).
+     *     %date%            Replaced with a date string for current timezone (default is ISO8601).
+     *     %message%         Replaced with the log message, coerced to a string.
+     *     %root_uri%        Replaced with the root URI of the request.
+     *     %resurce_uri%     Replaced with the resource URI of the request.
+     *     %content_type%    Replaced with the content type of the request.
+     *     %media_type%      Replaced with the media type of the request.
+     *     %content_charset% Replaced with the content charset of the request.
+     *     %content_length%  Replaced with the content length of the request.
+     *     %host%	         Replaced with the host of the request.
+     *     %host_with_port%  Replaced with the host with the port of the request.
+     *     %port%            Replaced with the port of the request.
+     *     %scheme%          Replaced with the scheme of the request.
+     *     %path%            Replaced with the path of the request.
+     *     %url%             Replaced with the url of the request.
+     *     %ip_address%	     Replaced with the ip address of the request.
+     *     %referer%         Replaced with the referer of the request.
+     *     %user_agent%      Replaced with the user agent of the request.
      *
      * @param   array $settings
      * @return  void
@@ -132,16 +147,49 @@ class DateTimeFileWriter
                 $label = 'INFO';
                 break;
         }
+        
+        //Get the request
+        $request = \Slim\Slim::getInstance()->request;
 
         //Get formatted log message
         $message = str_replace(array(
             '%label%',
             '%date%',
-            '%message%'
+            '%message%',
+            '%root_uri%',
+            '%resurce_uri%',
+            '%content_type%',
+            '%media_type%',
+            '%content_charset%',
+            '%content_length%',
+            '%host%',
+            '%host_with_port%',
+            '%port%',
+            '%scheme%',
+            '%path%',
+            '%url%',
+            '%ip_address%',
+            '%referer%',
+            '%user_agent%'
         ), array(
             $label,
             date($this->settings['date_message_format']),
-            (string)$object
+            (string)$object,
+            $request->getRootUri(),
+            $request->getResourceUri(),
+            $request->getContentType(),
+            $request->getMediaType(),
+            $request->getContentCharset(),
+            $request->getContentLength(),
+            $request->getHost(),
+            $request->getHostWithPort(),
+            $request->getPort(),
+            $request->getScheme(),
+            $request->getPath(),
+            $request->getUrl(),
+            $request->getIp(),
+            $request->getReferer(),
+            $request->getUserAgent()
         ), $this->settings['message_format']);
 
         //Open resource handle to log file
