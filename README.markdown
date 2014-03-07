@@ -64,7 +64,8 @@ demonstrates how to use the custom `DateTimeLogWriter` to write rolling log file
         'log.writer' => new \Slim\Extras\Log\DateTimeFileWriter(array(
             'path' => './logs',
             'name_format' => 'Y-m-d',
-            'message_format' => '%label% - %date% - %message%'
+            'message_format' => '%label% - %date% - %message%',
+            'date_message_format' => 'Y-m-d'
         ))
     ));
 

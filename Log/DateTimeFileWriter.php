@@ -69,12 +69,15 @@ class DateTimeFileWriter
      * (string) The log file name format; parsed with `date()`.
      *
      * extension:
-     * (string) The file extention to append to the filename`.     
+     * (string) The file extention to append to the filename`.
+     * 
+     * date_message_format:
+     * (string) The date format to use in the %date% parameter in message_format; parsed with `date()`.
      *
      * message_format:
      * (string) The log message format; available tokens are...
      *     %label%      Replaced with the log message level (e.g. FATAL, ERROR, WARN).
-     *     %date%       Replaced with a ISO8601 date string for current timezone.
+     *     %date%       Replaced with a date string for current timezone (default is ISO8601).
      *     %message%    Replaced with the log message, coerced to a string.
      *
      * @param   array $settings
@@ -87,6 +90,7 @@ class DateTimeFileWriter
             'path' => './logs',
             'name_format' => 'Y-m-d',
             'extension' => 'log',
+            'date_message_format' => 'c',
             'message_format' => '%label% - %date% - %message%'
         ), $settings);
 
@@ -127,7 +131,7 @@ class DateTimeFileWriter
             '%message%'
         ), array(
             $label,
-            date('c'),
+            date($this->settings['date_message_format']),
             (string)$object
         ), $this->settings['message_format']);
 
