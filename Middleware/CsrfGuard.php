@@ -64,7 +64,11 @@ class CsrfGuard extends \Slim\Middleware
         }
 
         if (! isset($_SESSION[$this->key])) {
-            $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
+            if(function_exists('openssl_random_pseudo_bytes')){
+                $_SESSION[$this->key] = bin2hex(openssl_random_pseudo_bytes(20));
+            }else{
+                $_SESSION[$this->key] = sha1(serialize($_SERVER) . rand(0, 0xffffffff));
+            }
         }
 
         $token = $_SESSION[$this->key];
