@@ -5,6 +5,8 @@ you quickly write simple yet powerful web applications.
 
 ---
 #### For custom views we are now recommending using the [Slim Views](https://github.com/codeguy/Slim-Views) repo instead. We are simplifying the amount of views we officially support and will be splitting up the Slim Extras repo into smaller chunks.
+
+#### For custom loggers we are now recommending using the [Slim Logger](https://github.com/codeguy/Slim-Logger) repo instead.
 ---
 
 ## Custom Views
