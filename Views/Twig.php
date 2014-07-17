@@ -89,14 +89,18 @@ class Twig extends \Slim\View
      * This method will output the rendered template content
      *
      * @param   string $template The path to the Twig template, relative to the Twig templates directory.
-     * @return  void
+     * @param  array  $data         Any additonal data to be passed to the template.
+     * @return string               The rendered template
      */
-    public function render($template)
+    public function render($template, $data = null)
     {
         $env = $this->getEnvironment();
         $template = $env->loadTemplate($template);
 
-        return $template->render($this->data);
+        return $template->render(array_merge(
+            $this->data->all(),
+            (array) $data)
+        );
     }
 
     /**
