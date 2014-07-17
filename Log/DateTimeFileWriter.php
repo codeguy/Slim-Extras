@@ -69,13 +69,31 @@ class DateTimeFileWriter
      * (string) The log file name format; parsed with `date()`.
      *
      * extension:
-     * (string) The file extention to append to the filename`.     
+     * (string) The file extention to append to the filename`.
+     * 
+     * date_message_format:
+     * (string) The date format to use in the %date% parameter in message_format; parsed with `date()`.
      *
      * message_format:
      * (string) The log message format; available tokens are...
-     *     %label%      Replaced with the log message level (e.g. FATAL, ERROR, WARN).
-     *     %date%       Replaced with a ISO8601 date string for current timezone.
-     *     %message%    Replaced with the log message, coerced to a string.
+     *     %label%           Replaced with the log message level (e.g. FATAL, ERROR, WARN).
+     *     %date%            Replaced with a date string for current timezone (default is ISO8601).
+     *     %message%         Replaced with the log message, coerced to a string.
+     *     %root_uri%        Replaced with the root URI of the request.
+     *     %resurce_uri%     Replaced with the resource URI of the request.
+     *     %content_type%    Replaced with the content type of the request.
+     *     %media_type%      Replaced with the media type of the request.
+     *     %content_charset% Replaced with the content charset of the request.
+     *     %content_length%  Replaced with the content length of the request.
+     *     %host%	         Replaced with the host of the request.
+     *     %host_with_port%  Replaced with the host with the port of the request.
+     *     %port%            Replaced with the port of the request.
+     *     %scheme%          Replaced with the scheme of the request.
+     *     %path%            Replaced with the path of the request.
+     *     %url%             Replaced with the url of the request.
+     *     %ip_address%	     Replaced with the ip address of the request.
+     *     %referer%         Replaced with the referer of the request.
+     *     %user_agent%      Replaced with the user agent of the request.
      *
      * @param   array $settings
      * @return  void
@@ -87,6 +105,7 @@ class DateTimeFileWriter
             'path' => './logs',
             'name_format' => 'Y-m-d',
             'extension' => 'log',
+            'date_message_format' => 'c',
             'message_format' => '%label% - %date% - %message%'
         ), $settings);
 
@@ -106,8 +125,14 @@ class DateTimeFileWriter
         //Determine label
         $label = 'DEBUG';
         switch ($level) {
-            case \Slim\Log::FATAL:
-                $label = 'FATAL';
+            case \Slim\Log::EMERGENCY:
+                $label = 'EMERGENCY';
+                break;
+            case \Slim\Log::ALERT:
+                $label = 'ALERT';
+                break;
+            case \Slim\Log::CRITICAL:
+                $label = 'CRITICAL';
                 break;
             case \Slim\Log::ERROR:
                 $label = 'ERROR';
@@ -115,20 +140,56 @@ class DateTimeFileWriter
             case \Slim\Log::WARN:
                 $label = 'WARN';
                 break;
+            case \Slim\Log::NOTICE:
+                $label = 'NOTICE';
+                break;
             case \Slim\Log::INFO:
                 $label = 'INFO';
                 break;
         }
+        
+        //Get the request
+        $request = \Slim\Slim::getInstance()->request;
 
         //Get formatted log message
         $message = str_replace(array(
             '%label%',
             '%date%',
-            '%message%'
+            '%message%',
+            '%root_uri%',
+            '%resurce_uri%',
+            '%content_type%',
+            '%media_type%',
+            '%content_charset%',
+            '%content_length%',
+            '%host%',
+            '%host_with_port%',
+            '%port%',
+            '%scheme%',
+            '%path%',
+            '%url%',
+            '%ip_address%',
+            '%referer%',
+            '%user_agent%'
         ), array(
             $label,
-            date('c'),
-            (string)$object
+            date($this->settings['date_message_format']),
+            (string)$object,
+            $request->getRootUri(),
+            $request->getResourceUri(),
+            $request->getContentType(),
+            $request->getMediaType(),
+            $request->getContentCharset(),
+            $request->getContentLength(),
+            $request->getHost(),
+            $request->getHostWithPort(),
+            $request->getPort(),
+            $request->getScheme(),
+            $request->getPath(),
+            $request->getUrl(),
+            $request->getIp(),
+            $request->getReferer(),
+            $request->getUserAgent()
         ), $this->settings['message_format']);
 
         //Open resource handle to log file
