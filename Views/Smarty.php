@@ -35,7 +35,7 @@ namespace Slim\Extras\Views;
  * The SmartyView is a custom View class that renders templates using the Smarty
  * template language (http://www.smarty.net).
  *
- * Two fields that you, the developer, will need to change are:
+ * Four fields that you, the developer, will need to change are:
  * - smartyDirectory
  * - smartyTemplatesDirectory
  * - smartyCompileDirectory
