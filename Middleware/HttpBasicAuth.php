@@ -81,7 +81,8 @@ class HttpBasicAuth extends \Slim\Middleware
         $res = $this->app->response();
         $authUser = $req->headers('PHP_AUTH_USER');
         $authPass = $req->headers('PHP_AUTH_PW');
-        if ($authUser && $authPass && $authUser === $this->username && $authPass === $this->password) {
+        if (is_string($authUser) && is_string($authPass)
+				&& $authUser === $this->username && $authPass === $this->password) {
             $this->next->call();
         } else {
             $res->status(401);
