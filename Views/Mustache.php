@@ -48,6 +48,11 @@ class Mustache extends \Slim\View
      * @var string The path to the directory containing Mustache.php
      */
     public static $mustacheDirectory = null;
+    
+    /**
+     * @var  string The path to the directory containing Mustache partials
+     */
+    public static $mustachePartialsDirectory = null;
 
     /**
      * Renders a template using Mustache.php.
@@ -60,7 +65,10 @@ class Mustache extends \Slim\View
     {
         require_once self::$mustacheDirectory . '/Autoloader.php';
         \Mustache_Autoloader::register(dirname(self::$mustacheDirectory));
-        $m = new \Mustache_Engine();
+        $partialsDirectory = (!empty(self::$mustachePartialsDirectory) ? self::$mustachePartialsDirectory : $this->getTemplatesDirectory());
+        $m = new \Mustache_Engine(array(
+            'partials_loader' => new \Mustache_Loader_FilesystemLoader($partialsDirectory)
+        ));
         $contents = file_get_contents($this->getTemplatesDirectory() . '/' . ltrim($template, '/'));
         return $m->render($contents, $this->data);
     }
