@@ -120,10 +120,10 @@ class Twig extends \Slim\View
             );
 
             // Check for Composer Package Autoloader class loading
-            if (!class_exists('\Twig_Extensions_Autoloader')) {
+//            if (!class_exists('\Twig_Extensions_Autoloader')) {
                 $extension_autoloader = dirname(__FILE__) . '/Extension/TwigAutoloader.php';
                 if (file_exists($extension_autoloader)) require_once $extension_autoloader;
-            }
+//            }
 
             if (class_exists('\Twig_Extensions_Autoloader')) {
                 \Twig_Extensions_Autoloader::register();
