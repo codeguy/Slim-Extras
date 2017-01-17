@@ -86,6 +86,7 @@ class DateTimeFileWriter
         $this->settings = array_merge(array(
             'path' => './logs',
             'name_format' => 'Y-m-d',
+            'date_format' => 'c',
             'extension' => 'log',
             'message_format' => '%label% - %date% - %message%'
         ), $settings);
@@ -127,7 +128,7 @@ class DateTimeFileWriter
             '%message%'
         ), array(
             $label,
-            date('c'),
+            date($this->settings['date_format']),
             (string)$object
         ), $this->settings['message_format']);
 
